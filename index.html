@@ -29,15 +29,14 @@
         .starter-status.danger { background: var(--danger); }
         .starter-icon, .session-phase { width: 44px; height: 44px; background: var(--primary-light); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
         .starter-info, .session-info, .recipe-info { flex: 1; }
-        .starter-name, .session-name, .recipe-name { font-weight: 600; font-size: 16px; margin-bottom: 4px; color: var(--text); }
+        .starter-name, .session-name, .recipe-name { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
         .starter-meta, .session-meta { font-size: 13px; color: var(--text-secondary); display: flex; gap: 8px; flex-wrap: wrap; }
         .phase-time { color: var(--primary); font-weight: 500; }
         .fed-btn { padding: 8px 16px; background: rgba(93, 140, 74, 0.12); color: var(--success); border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
-        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; gap: 8px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
         .section-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; }
-        .header-buttons { display: flex; gap: 8px; }
         .add-btn { width: 36px; height: 36px; background: var(--primary); color: white; border: none; border-radius: 10px; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .icon-btn { width: 36px; height: 36px; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 10px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .icon-btn { width: 36px; height: 36px; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 10px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-right: 8px; }
         .recipe-card { display: flex; gap: 14px; }
         .recipe-thumb { width: 70px; height: 70px; background: linear-gradient(135deg, var(--primary-light), #E8D4C4); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
         .tag { padding: 4px 10px; background: var(--bg); border-radius: 6px; font-size: 12px; color: var(--text-secondary); display: inline-block; }
@@ -50,29 +49,32 @@
         .modal-close { width: 32px; height: 32px; background: var(--bg); border: none; border-radius: 8px; cursor: pointer; font-size: 18px; }
         .modal-body { padding: 20px 24px; }
         .form-group { margin-bottom: 20px; }
-        .form-label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
-        .form-input, .form-select { width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 16px; font-family: inherit; background: var(--bg); color: var(--text); }
+        .form-label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+        .form-input, .form-select { width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 16px; font-family: inherit; background: var(--bg); }
+        .form-row { display: flex; gap: 8px; }
+        .form-row .form-input { flex: 1; }
+        .form-row .form-select { width: 80px; flex-shrink: 0; }
         textarea.form-input { min-height: 80px; resize: vertical; }
         .btn-primary { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: var(--radius-sm); font-size: 16px; font-weight: 600; cursor: pointer; margin-bottom: 10px; }
-        .btn-secondary { width: 100%; padding: 12px 16px; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 10px; }
+        .btn-secondary { width: 100%; padding: 14px; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .btn-danger { width: 100%; padding: 16px; background: rgba(196, 93, 74, 0.1); color: var(--danger); border: none; border-radius: var(--radius-sm); font-size: 16px; font-weight: 600; cursor: pointer; }
         .toggle-group { display: flex; background: var(--bg); border-radius: var(--radius-sm); padding: 4px; }
         .toggle-option { flex: 1; padding: 12px; border: none; background: none; font-size: 14px; font-weight: 500; cursor: pointer; border-radius: 8px; color: var(--text-secondary); }
         .toggle-option.active { background: var(--bg-card); color: var(--text); box-shadow: var(--shadow); }
         .detail-section { background: var(--bg); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 16px; }
-        .detail-section h4 { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text); }
+        .detail-section h4 { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
         .check-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; cursor: pointer; border-bottom: 1px solid var(--border); }
         .check-item:last-child { border-bottom: none; }
         .check-item.checked .check-text { text-decoration: line-through; color: var(--text-secondary); }
         .check-icon { font-size: 20px; flex-shrink: 0; }
-        .check-text { flex: 1; line-height: 1.4; color: var(--text); }
+        .check-text { flex: 1; line-height: 1.4; }
         .timer-badge { display: inline-flex; align-items: center; gap: 6px; padding: 10px 14px; background: rgba(212,133,74,0.1); border-radius: 8px; font-size: 14px; color: var(--primary); margin-bottom: 16px; }
         .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .calendar-nav button { width: 36px; height: 36px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; font-size: 18px; }
         .calendar-month { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
         .calendar-day-header { text-align: center; font-size: 12px; font-weight: 600; color: var(--text-secondary); padding: 8px 0; }
-        .calendar-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 10px; cursor: pointer; font-size: 14px; gap: 2px; color: var(--text); }
+        .calendar-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 10px; cursor: pointer; font-size: 14px; gap: 2px; }
         .calendar-day:hover { background: var(--bg-card); }
         .calendar-day.today { border: 2px solid var(--primary); }
         .calendar-day.selected { background: rgba(212, 133, 74, 0.15); }
@@ -84,8 +86,25 @@
         .event-card:hover { background: var(--border); }
         .empty-state { text-align: center; padding: 40px 20px; }
         .empty-state-icon { width: 80px; height: 80px; background: var(--primary-light); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 36px; margin: 0 auto 20px; }
-        .json-input { font-family: monospace; font-size: 12px; min-height: 150px; }
-        .template-box { background: var(--bg); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 11px; white-space: pre-wrap; margin-bottom: 12px; max-height: 200px; overflow-y: auto; }
+        .info-banner { background: rgba(212,133,74,0.1); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+        .info-banner h4 { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 14px; }
+        .info-banner p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+        .tip-banner { background: rgba(212,169,74,0.15); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+        .tip-banner h4 { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 14px; color: var(--warning); }
+        .tip-banner p { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
+        .ratio-display { text-align: center; padding: 16px; background: rgba(212,133,74,0.1); border-radius: 12px; margin-bottom: 16px; }
+        .ratio-display .label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+        .ratio-display .value { font-size: 28px; font-weight: bold; font-family: monospace; color: var(--primary); }
+        .quick-ratios { display: flex; gap: 8px; margin-bottom: 16px; }
+        .quick-ratios button { flex: 1; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; }
+        .quick-ratios button:hover { background: var(--border); }
+        .feeding-log { background: var(--bg-card); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); cursor: pointer; }
+        .feeding-log:hover { background: var(--bg); }
+        .feeding-log .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .feeding-log .date { font-weight: 600; font-size: 14px; }
+        .feeding-log .ratio { font-family: monospace; font-weight: bold; color: var(--primary); }
+        .feeding-log .details { display: flex; gap: 16px; font-size: 13px; color: var(--text-secondary); }
+        .version-badge { position: fixed; bottom: 100px; right: 20px; background: var(--bg-card); padding: 6px 12px; border-radius: 20px; font-size: 11px; color: var(--text-secondary); box-shadow: var(--shadow); border: 1px solid var(--border); }
     </style>
 </head>
 <body>
@@ -99,9 +118,9 @@
             <div id="recipes-tab" class="tab-content">
                 <div class="section-header">
                     <h2 class="section-title">Recipes</h2>
-                    <div class="header-buttons">
-                        <button class="icon-btn" onclick="exportAllRecipes()" title="Export All">↑</button>
-                        <button class="icon-btn" onclick="openModal('import-recipe')" title="Import">↓</button>
+                    <div style="display:flex;align-items:center;">
+                        <button class="icon-btn" onclick="importRecipes()" title="Import">↑</button>
+                        <button class="icon-btn" onclick="exportRecipes()" title="Export">↓</button>
                         <button class="add-btn" onclick="openModal('add-recipe')">+</button>
                     </div>
                 </div>
@@ -123,9 +142,10 @@
             <button class="tab-btn" onclick="switchTab('sessions')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Sessions</span></button>
             <button class="tab-btn" onclick="switchTab('calendar')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>Calendar</span></button>
         </nav>
+        <div class="version-badge">v1.22 (4) Web Demo</div>
     </div>
 
-    <!-- Add Starter Modal -->
+    <!-- Add/Edit Starter Modal -->
     <div class="modal-overlay" id="add-starter-modal"><div class="modal"><div class="modal-header"><h3 class="modal-title" id="starter-modal-title">Add Starter</h3><button class="modal-close" onclick="closeModal('add-starter')">&times;</button></div><div class="modal-body">
         <input type="hidden" id="edit-starter-id">
         <div class="form-group"><label class="form-label">Name</label><input type="text" class="form-input" id="starter-name" placeholder="e.g., Nancy"></div>
@@ -136,12 +156,45 @@
         <button class="btn-danger" id="delete-starter-btn" style="display:none" onclick="deleteStarter()">Delete Starter</button>
     </div></div></div>
 
+    <!-- Feed Starter Modal -->
+    <div class="modal-overlay" id="feed-starter-modal"><div class="modal"><div class="modal-header"><h3 class="modal-title" id="feed-modal-title">Feed Starter</h3><button class="modal-close" onclick="closeModal('feed-starter')">&times;</button></div><div class="modal-body">
+        <input type="hidden" id="feed-starter-id">
+        <button class="btn-secondary" onclick="quickFeed()" style="margin-bottom:20px">⚡ Quick Feed (No Details)</button>
+        <hr style="border:none;border-top:1px solid var(--border);margin-bottom:20px;">
+        <div class="ratio-display"><div class="label">Feeding Ratio</div><div class="value" id="feed-ratio">—</div></div>
+        <div class="form-group"><label class="form-label">Starter Amount</label><div class="form-row"><input type="number" class="form-input" id="feed-starter-amt" placeholder="50" oninput="updateRatio()"><select class="form-select" id="feed-starter-unit"><option>g</option><option>oz</option><option>ml</option><option>cups</option><option>tbsp</option></select></div></div>
+        <div class="form-group"><label class="form-label">Water Amount</label><div class="form-row"><input type="number" class="form-input" id="feed-water-amt" placeholder="100" oninput="updateRatio()"><select class="form-select" id="feed-water-unit"><option>g</option><option>oz</option><option>ml</option><option>cups</option><option>tbsp</option></select></div></div>
+        <div class="form-group"><label class="form-label">Flour Amount</label><div class="form-row"><input type="number" class="form-input" id="feed-flour-amt" placeholder="100" oninput="updateRatio()"><select class="form-select" id="feed-flour-unit"><option>g</option><option>oz</option><option>ml</option><option>cups</option><option>tbsp</option></select></div></div>
+        <div class="form-group"><label class="form-label">Quick Ratios</label><div class="quick-ratios"><button onclick="applyRatio('1:1:1')">1:1:1</button><button onclick="applyRatio('1:2:2')">1:2:2</button><button onclick="applyRatio('1:5:5')">1:5:5</button></div></div>
+        <div class="form-group"><label class="form-label">Flour Type</label><select class="form-select" id="feed-flour-type" style="width:100%"><option>All-Purpose</option><option>Bread Flour</option><option>Whole Wheat</option><option>Rye</option><option>Spelt</option><option>Other</option></select></div>
+        <div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="feed-notes" placeholder="Optional notes..."></textarea></div>
+        <button class="btn-primary" onclick="recordFeeding()">Record Feeding</button>
+    </div></div></div>
+
+    <!-- Build Starter Modal -->
+    <div class="modal-overlay" id="build-starter-modal"><div class="modal"><div class="modal-header"><h3 class="modal-title">Build from Scratch</h3><button class="modal-close" onclick="closeModal('build-starter')">&times;</button></div><div class="modal-body">
+        <div class="info-banner"><h4>ℹ️ Building a New Starter</h4><p>Creating a sourdough starter from scratch typically takes 7-14 days. Feed daily and track your progress.</p></div>
+        <div class="tip-banner"><h4>💡 Pro Tip</h4><p>Adding organic fruit like grapes, apple peels, or raisins to your flour-water mixture can help promote natural yeast growth in the early days. Remove the fruit after 2-3 days once you see bubbles forming.</p></div>
+        <div class="form-group"><label class="form-label">Starter Name</label><input type="text" class="form-input" id="build-starter-name" placeholder="e.g., New Starter"></div>
+        <div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="build-starter-notes"></textarea></div>
+        <div class="detail-section"><h4>14-Day Guide</h4>
+            <p style="margin-bottom:8px"><strong style="color:var(--primary)">Day 1-3:</strong> Mix equal parts flour and water. Optionally add organic grapes. May see little activity.</p>
+            <p style="margin-bottom:8px"><strong style="color:var(--primary)">Day 4-7:</strong> Remove any fruit. Continue daily feedings. Should start seeing bubbles.</p>
+            <p style="margin-bottom:8px"><strong style="color:var(--primary)">Day 8-10:</strong> Increase feedings if very active. Discard half before feeding.</p>
+            <p><strong style="color:var(--primary)">Day 11-14:</strong> Starter should reliably double. Passes float test. Ready to bake!</p>
+        </div>
+        <button class="btn-primary" onclick="startBuildingStarter()">Start Building Starter</button>
+    </div></div></div>
+
+    <!-- Feeding History Modal -->
+    <div class="modal-overlay" id="feeding-history-modal"><div class="modal"><div class="modal-header"><h3 class="modal-title">Feeding History</h3><button class="modal-close" onclick="closeModal('feeding-history')">&times;</button></div><div class="modal-body" id="feeding-history-content"></div></div></div>
+
     <!-- Add Recipe Modal -->
     <div class="modal-overlay" id="add-recipe-modal"><div class="modal"><div class="modal-header"><h3 class="modal-title" id="recipe-modal-title">Add Recipe</h3><button class="modal-close" onclick="closeModal('add-recipe')">&times;</button></div><div class="modal-body">
         <input type="hidden" id="edit-recipe-id">
         <div class="form-group"><label class="form-label">Recipe Name</label><input type="text" class="form-input" id="recipe-name"></div>
         <div class="form-group"><label class="form-label">Bread Type</label><input type="text" class="form-input" id="recipe-type" placeholder="e.g., Sourdough"></div>
-        <div class="form-group"><label class="form-label">Number of Days</label><select class="form-select" id="recipe-days"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div>
+        <div class="form-group"><label class="form-label">Number of Days</label><select class="form-select" id="recipe-days" style="width:100%"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div>
         <div class="form-group"><label class="form-label">Ingredients</label><div id="ingredients-list" style="background:var(--bg);border-radius:10px;padding:12px;margin-bottom:8px;min-height:50px"></div><button type="button" class="btn-secondary" onclick="addIngredient()">+ Add Ingredient</button></div>
         <div class="form-group"><label class="form-label">Directions</label><div id="directions-list" style="background:var(--bg);border-radius:10px;padding:12px;margin-bottom:8px;min-height:50px"></div><button type="button" class="btn-secondary" onclick="addDirection()">+ Add Step</button></div>
         <div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="recipe-notes"></textarea></div>
@@ -149,39 +202,13 @@
         <button class="btn-danger" id="delete-recipe-btn" style="display:none" onclick="deleteRecipe()">Delete Recipe</button>
     </div></div></div>
 
-    <!-- Import Recipe Modal -->
-    <div class="modal-overlay" id="import-recipe-modal"><div class="modal"><div class="modal-header"><h3 class="modal-title">Import Recipe</h3><button class="modal-close" onclick="closeModal('import-recipe')">&times;</button></div><div class="modal-body">
-        <div class="form-group">
-            <label class="form-label">Paste Recipe JSON</label>
-            <textarea class="form-input json-input" id="import-json" placeholder="Paste your recipe JSON here..."></textarea>
-        </div>
-        <button class="btn-secondary" onclick="pasteFromClipboard()">📋 Paste from Clipboard</button>
-        <button class="btn-primary" onclick="importRecipes()">Import Recipe</button>
-        <div class="form-group" style="margin-top:20px">
-            <label class="form-label">Template Format</label>
-            <div class="template-box">{
-  "name": "Recipe Name",
-  "type": "Sourdough",
-  "days": 2,
-  "ingredients": [
-    {"amount": "500", "unit": "g", "name": "Flour"}
-  ],
-  "directions": [
-    {"day": 1, "step": "Mix ingredients"}
-  ],
-  "notes": "Optional notes"
-}</div>
-            <button class="btn-secondary" onclick="copyTemplate()">📄 Copy Template</button>
-        </div>
-    </div></div></div>
-
     <!-- View Recipe Modal -->
     <div class="modal-overlay" id="view-recipe-modal"><div class="modal"><div class="modal-header"><h3 class="modal-title" id="view-recipe-title">Recipe</h3><button class="modal-close" onclick="closeModal('view-recipe')">&times;</button></div><div class="modal-body" id="view-recipe-body"></div></div></div>
     
     <!-- Start Session Modal -->
     <div class="modal-overlay" id="start-session-modal"><div class="modal"><div class="modal-header"><h3 class="modal-title">Start Session</h3><button class="modal-close" onclick="closeModal('start-session')">&times;</button></div><div class="modal-body">
-        <div class="form-group"><label class="form-label">Select Recipe</label><select class="form-select" id="session-recipe"></select></div>
-        <div class="form-group"><label class="form-label">Select Starter (Optional)</label><select class="form-select" id="session-starter"><option value="">None</option></select></div>
+        <div class="form-group"><label class="form-label">Select Recipe</label><select class="form-select" id="session-recipe" style="width:100%"></select></div>
+        <div class="form-group"><label class="form-label">Select Starter (Optional)</label><select class="form-select" id="session-starter" style="width:100%"><option value="">None</option></select></div>
         <button class="btn-primary" onclick="startSession()">Start Baking</button>
     </div></div></div>
     
@@ -199,13 +226,11 @@
         var tempIngredients = [];
         var tempDirections = [];
 
-        var defaultNotesTemplate = "── DAY NOTES ──\n\n\n── MIXING ──\nStarter characteristics: \nRoom temperature: \nWater temperature: \nDough temp at end of mixing: \nDough characteristics: \n\n── FERMENTATION ──\nStart time: \nRoom/fridge temp: \nDough temp at end: \nEnd time: \nDough characteristics: \n\n── SHAPING ──\nTime shaped: \nDough characteristics: \n\n── PROOFING ──\nStart time: \nRoom/fridge temp: \nDough temp at end: \nEnd time: \nDough characteristics: \n\n── BAKING ──\nOven temperature: \nBaking time: \n\n── AFTER-BAKE ──\nCrust color: \nShape: \nVolume: \nAroma: \nInterior hole structure: \nTaste: \n\n── COMMENTS ──\n";
-
         function loadData() {
             var saved = localStorage.getItem('mothernance_data');
             if (saved) appData = JSON.parse(saved);
-            if (!appData.starters.length) appData.starters = [{ id: 1, name: 'Nancy', location: 'refrigerator', lastFed: new Date(Date.now() - 5*86400000).toISOString().split('T')[0], notes: 'Main starter' }];
-            if (!appData.recipes.length) appData.recipes = [{ id: 1, name: 'Country Loaf', type: 'Sourdough', days: 2, ingredients: [{id:1,amount:'500',unit:'g',name:'Bread Flour'},{id:2,amount:'350',unit:'g',name:'Water'},{id:3,amount:'100',unit:'g',name:'Starter'},{id:4,amount:'10',unit:'g',name:'Salt'}], directions: [{id:1,day:1,step:'Mix flour and water, autolyse 30 min'},{id:2,day:1,step:'Add starter and salt, mix well'},{id:3,day:1,step:'Bulk ferment 4-6 hours with folds'},{id:4,day:2,step:'Preheat oven to 500F'},{id:5,day:2,step:'Bake covered 20 min, uncovered 25 min'}], phases: ['mixing','bulk-fermentation','shaping','proofing','baking','completed'] }];
+            if (!appData.starters.length) appData.starters = [{ id: 1, name: 'Nancy', location: 'refrigerator', lastFed: new Date(Date.now() - 5*86400000).toISOString().split('T')[0], notes: 'Main starter', feedingHistory: [] }];
+            if (!appData.recipes.length) appData.recipes = [{ id: 1, name: 'Country Loaf', type: 'Sourdough', days: 2, ingredients: [{id:1,amount:'500',unit:'g',name:'Bread Flour'},{id:2,amount:'350',unit:'g',name:'Water'},{id:3,amount:'100',unit:'g',name:'Starter'},{id:4,amount:'10',unit:'g',name:'Salt'}], directions: [{id:1,day:1,step:'Mix flour and water, autolyse 30 min'},{id:2,day:1,step:'Add starter and salt, mix well'},{id:3,day:1,step:'Bulk ferment 4-6 hours with folds'},{id:4,day:2,step:'Preheat oven to 500°F'},{id:5,day:2,step:'Bake covered 20 min, uncovered 25 min'}] }];
             saveData();
         }
         function saveData() { localStorage.setItem('mothernance_data', JSON.stringify(appData)); }
@@ -220,20 +245,21 @@
 
         function renderStarters() {
             var c = document.getElementById('starters-list');
-            if (!appData.starters.length) { c.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🫙</div><h3>No Starters</h3><p style="color:var(--text-secondary)">Add your first starter</p></div>'; return; }
+            if (!appData.starters.length) { c.innerHTML = '<div class="empty-state"><div class="empty-state-icon">⭕</div><h3>No Starters</h3><p style="color:var(--text-secondary)">Add your first sourdough starter</p></div>'; return; }
             c.innerHTML = appData.starters.map(function(s) {
                 var days = s.lastFed ? Math.floor((Date.now() - new Date(s.lastFed+'T00:00:00').getTime()) / 86400000) : null;
                 var threshold = s.location === 'refrigerator' ? 7 : 1;
                 var status = s.location === 'dried' ? 'good' : days === null ? 'warning' : days < threshold ? 'good' : days === threshold ? 'warning' : 'danger';
                 var fedStr = s.lastFed ? new Date(s.lastFed+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : 'Never';
                 var locName = s.location.charAt(0).toUpperCase() + s.location.slice(1);
-                return '<div class="card starter-card" onclick="editStarter('+s.id+')"><div class="starter-status '+status+'"></div><div class="starter-icon">🫙</div><div class="starter-info"><div class="starter-name">'+s.name+'</div><div class="starter-meta"><span>'+locName+'</span><span>Fed: '+fedStr+'</span>'+(days!==null?' <span>('+days+'d)</span>':'')+'</div></div>'+(s.location!=='dried'?'<button class="fed-btn" onclick="event.stopPropagation();feedStarter('+s.id+')">Fed</button>':'')+'</div>';
+                var buildBadge = s.isBuilding ? '<span style="background:var(--primary);color:white;padding:2px 6px;border-radius:4px;font-size:10px;margin-left:6px">Day '+s.buildDay+'/14</span>' : '';
+                return '<div class="card starter-card" onclick="editStarter('+s.id+')"><div class="starter-status '+status+'"></div><div class="starter-icon">'+s.name.charAt(0).toUpperCase()+'</div><div class="starter-info"><div class="starter-name">'+s.name+buildBadge+'</div><div class="starter-meta"><span>'+locName+'</span><span>Fed: '+fedStr+'</span>'+(days!==null?' <span>('+days+'d)</span>':'')+'</div></div>'+(s.location!=='dried'?'<button class="fed-btn" onclick="event.stopPropagation();openFeedModal('+s.id+')">Fed</button>':'')+'</div>';
             }).join('');
         }
 
         function renderRecipes() {
             var c = document.getElementById('recipes-list');
-            if (!appData.recipes.length) { c.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📖</div><h3>No Recipes</h3><p style="color:var(--text-secondary)">Add your first recipe</p></div>'; return; }
+            if (!appData.recipes.length) { c.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📖</div><h3>No Recipes</h3><p style="color:var(--text-secondary)">Add your first bread recipe</p></div>'; return; }
             c.innerHTML = appData.recipes.map(function(r) { return '<div class="card recipe-card" onclick="viewRecipe('+r.id+')"><div class="recipe-thumb">🍞</div><div class="recipe-info"><div class="recipe-name">'+r.name+'</div><div style="font-size:13px;color:var(--text-secondary)">'+(r.type||'Bread')+'</div><div style="margin-top:6px"><span class="tag">'+r.days+' day'+(r.days>1?'s':'')+'</span></div></div></div>'; }).join('');
         }
 
@@ -262,23 +288,120 @@
             var mins = Math.floor((Date.now() - new Date(s.phaseStartTime).getTime()) / 60000);
             return mins >= 60 ? Math.floor(mins/60)+'h '+mins%60+'m' : mins+'m';
         }
-        function getPhaseIcon(p) { return {mixing:'🥄','bulk-fermentation':'🫗',shaping:'🤲',proofing:'🧺',baking:'🔥',completed:'✓'}[p]||'?'; }
+        function getPhaseIcon(p) { return {mixing:'🥣','bulk-fermentation':'⏳',shaping:'🤲',proofing:'🌡️',baking:'🔥',completed:'✓'}[p]||'?'; }
 
         function openModal(t) {
             if (t === 'add-starter') { document.getElementById('starter-modal-title').textContent = 'Add Starter'; document.getElementById('edit-starter-id').value = ''; document.getElementById('starter-name').value = ''; document.getElementById('starter-last-fed').value = ''; document.getElementById('starter-notes').value = ''; document.getElementById('delete-starter-btn').style.display = 'none'; selectedLocation = 'refrigerator'; document.querySelectorAll('#add-starter-modal .toggle-option').forEach(function(b){b.classList.remove('active');}); document.querySelector('#add-starter-modal .toggle-option[data-value="refrigerator"]').classList.add('active'); document.getElementById('fed-date-group').style.display = 'block'; }
             if (t === 'add-recipe') { document.getElementById('recipe-modal-title').textContent = 'Add Recipe'; document.getElementById('edit-recipe-id').value = ''; document.getElementById('recipe-name').value = ''; document.getElementById('recipe-type').value = ''; document.getElementById('recipe-notes').value = ''; document.getElementById('delete-recipe-btn').style.display = 'none'; tempIngredients = []; tempDirections = []; renderTempIngredients(); renderTempDirections(); }
             if (t === 'start-session') { document.getElementById('session-recipe').innerHTML = appData.recipes.map(function(r){return '<option value="'+r.id+'">'+r.name+'</option>';}).join(''); document.getElementById('session-starter').innerHTML = '<option value="">None</option>' + appData.starters.filter(function(s){return s.location!=='dried';}).map(function(s){return '<option value="'+s.id+'">'+s.name+'</option>';}).join(''); }
-            if (t === 'import-recipe') { document.getElementById('import-json').value = ''; }
             document.getElementById(t + '-modal').classList.add('active');
         }
         function closeModal(t) { document.getElementById(t + '-modal').classList.remove('active'); }
         function selectLocation(btn) { document.querySelectorAll('#add-starter-modal .toggle-option').forEach(function(b){b.classList.remove('active');}); btn.classList.add('active'); selectedLocation = btn.dataset.value; document.getElementById('fed-date-group').style.display = selectedLocation === 'dried' ? 'none' : 'block'; }
 
+        function openFeedModal(id) {
+            var s = appData.starters.find(function(x){return x.id===id;});
+            if (!s) return;
+            document.getElementById('feed-starter-id').value = id;
+            document.getElementById('feed-modal-title').textContent = 'Feed ' + s.name;
+            document.getElementById('feed-starter-amt').value = '';
+            document.getElementById('feed-water-amt').value = '';
+            document.getElementById('feed-flour-amt').value = '';
+            document.getElementById('feed-notes').value = '';
+            document.getElementById('feed-ratio').textContent = '—';
+            openModal('feed-starter');
+        }
+
+        function updateRatio() {
+            var s = parseFloat(document.getElementById('feed-starter-amt').value) || 0;
+            var w = parseFloat(document.getElementById('feed-water-amt').value) || 0;
+            var f = parseFloat(document.getElementById('feed-flour-amt').value) || 0;
+            if (s > 0) {
+                var wr = Math.round(w / s);
+                var fr = Math.round(f / s);
+                document.getElementById('feed-ratio').textContent = '1:' + wr + ':' + fr;
+            } else {
+                document.getElementById('feed-ratio').textContent = '—';
+            }
+        }
+
+        function applyRatio(ratio) {
+            var parts = ratio.split(':').map(Number);
+            var base = parseFloat(document.getElementById('feed-starter-amt').value) || 50;
+            document.getElementById('feed-starter-amt').value = base;
+            document.getElementById('feed-water-amt').value = base * parts[1];
+            document.getElementById('feed-flour-amt').value = base * parts[2];
+            updateRatio();
+        }
+
+        function quickFeed() {
+            var id = parseInt(document.getElementById('feed-starter-id').value);
+            var s = appData.starters.find(function(x){return x.id===id;});
+            if (s) {
+                s.lastFed = new Date().toISOString().split('T')[0];
+                if (s.isBuilding) { s.buildDay = (s.buildDay || 0) + 1; if (s.buildDay >= 14) s.isBuilding = false; }
+                saveData();
+                renderStarters();
+            }
+            closeModal('feed-starter');
+        }
+
+        function recordFeeding() {
+            var id = parseInt(document.getElementById('feed-starter-id').value);
+            var s = appData.starters.find(function(x){return x.id===id;});
+            if (s) {
+                if (!s.feedingHistory) s.feedingHistory = [];
+                s.feedingHistory.push({
+                    id: Date.now(),
+                    date: new Date().toISOString(),
+                    starterAmount: document.getElementById('feed-starter-amt').value,
+                    starterUnit: document.getElementById('feed-starter-unit').value,
+                    waterAmount: document.getElementById('feed-water-amt').value,
+                    waterUnit: document.getElementById('feed-water-unit').value,
+                    flourAmount: document.getElementById('feed-flour-amt').value,
+                    flourUnit: document.getElementById('feed-flour-unit').value,
+                    flourType: document.getElementById('feed-flour-type').value,
+                    notes: document.getElementById('feed-notes').value
+                });
+                s.lastFed = new Date().toISOString().split('T')[0];
+                if (s.isBuilding) { s.buildDay = (s.buildDay || 0) + 1; if (s.buildDay >= 14) s.isBuilding = false; }
+                saveData();
+                renderStarters();
+            }
+            closeModal('feed-starter');
+        }
+
+        function startBuildingStarter() {
+            var name = document.getElementById('build-starter-name').value.trim();
+            if (!name) { alert('Please enter a name'); return; }
+            appData.starters.push({
+                id: Date.now(),
+                name: name,
+                location: 'countertop',
+                lastFed: new Date().toISOString().split('T')[0],
+                notes: document.getElementById('build-starter-notes').value,
+                feedingHistory: [],
+                isBuilding: true,
+                buildDay: 1
+            });
+            saveData();
+            renderStarters();
+            closeModal('build-starter');
+        }
+
         function saveStarter() {
             var name = document.getElementById('starter-name').value.trim(); if (!name) return alert('Enter name');
             var editId = document.getElementById('edit-starter-id').value;
-            var data = { id: editId ? parseInt(editId) : Date.now(), name: name, location: selectedLocation, lastFed: document.getElementById('starter-last-fed').value || null, notes: document.getElementById('starter-notes').value };
-            if (editId) { var i = appData.starters.findIndex(function(s){return s.id===parseInt(editId);}); if (i !== -1) appData.starters[i] = data; }
+            var data = { id: editId ? parseInt(editId) : Date.now(), name: name, location: selectedLocation, lastFed: document.getElementById('starter-last-fed').value || null, notes: document.getElementById('starter-notes').value, feedingHistory: [] };
+            if (editId) { 
+                var i = appData.starters.findIndex(function(s){return s.id===parseInt(editId);}); 
+                if (i !== -1) { 
+                    data.feedingHistory = appData.starters[i].feedingHistory || [];
+                    data.isBuilding = appData.starters[i].isBuilding;
+                    data.buildDay = appData.starters[i].buildDay;
+                    appData.starters[i] = data; 
+                }
+            }
             else { if (appData.starters.length >= 10) return alert('Max 10'); appData.starters.push(data); }
             saveData(); renderStarters(); closeModal('add-starter');
         }
@@ -298,17 +421,16 @@
             document.getElementById('add-starter-modal').classList.add('active');
         }
         function deleteStarter() { if (!confirm('Delete this starter?')) return; appData.starters = appData.starters.filter(function(s){return s.id!==parseInt(document.getElementById('edit-starter-id').value);}); saveData(); renderStarters(); closeModal('add-starter'); }
-        function feedStarter(id) { var s = appData.starters.find(function(x){return x.id===id;}); if (s) { s.lastFed = new Date().toISOString().split('T')[0]; saveData(); renderStarters(); } }
 
-        function renderTempIngredients() { var c = document.getElementById('ingredients-list'); c.innerHTML = tempIngredients.length ? tempIngredients.map(function(i,idx){return '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)"><span style="flex:1;color:var(--text)"><b>'+i.amount+' '+i.unit+'</b> '+i.name+'</span><button onclick="tempIngredients.splice('+idx+',1);renderTempIngredients()" style="background:rgba(196,93,74,0.1);color:var(--danger);border:none;border-radius:6px;width:28px;height:28px;cursor:pointer">×</button></div>';}).join('') : '<p style="color:var(--text-secondary);text-align:center">No ingredients</p>'; }
+        function renderTempIngredients() { var c = document.getElementById('ingredients-list'); c.innerHTML = tempIngredients.length ? tempIngredients.map(function(i,idx){return '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)"><span style="flex:1"><b>'+i.amount+' '+i.unit+'</b> '+i.name+'</span><button onclick="tempIngredients.splice('+idx+',1);renderTempIngredients()" style="background:rgba(196,93,74,0.1);color:var(--danger);border:none;border-radius:6px;width:28px;height:28px;cursor:pointer">×</button></div>';}).join('') : '<p style="color:var(--text-secondary);text-align:center">No ingredients</p>'; }
         function addIngredient() { var a = prompt('Amount (e.g., 500):'); if (!a) return; var u = prompt('Unit (e.g., g):') || 'g'; var n = prompt('Ingredient name:'); if (!n) return; tempIngredients.push({id:Date.now(),amount:a,unit:u,name:n}); renderTempIngredients(); }
-        function renderTempDirections() { var c = document.getElementById('directions-list'); c.innerHTML = tempDirections.length ? tempDirections.map(function(d,idx){return '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)"><span style="width:24px;height:24px;background:var(--primary);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px">'+(idx+1)+'</span><span style="flex:1;color:var(--text)"><b>Day '+d.day+':</b> '+d.step+'</span><button onclick="tempDirections.splice('+idx+',1);renderTempDirections()" style="background:rgba(196,93,74,0.1);color:var(--danger);border:none;border-radius:6px;width:28px;height:28px;cursor:pointer">×</button></div>';}).join('') : '<p style="color:var(--text-secondary);text-align:center">No directions</p>'; }
+        function renderTempDirections() { var c = document.getElementById('directions-list'); c.innerHTML = tempDirections.length ? tempDirections.map(function(d,idx){return '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)"><span style="width:24px;height:24px;background:var(--primary);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px">'+(idx+1)+'</span><span style="flex:1"><b>Day '+d.day+':</b> '+d.step+'</span><button onclick="tempDirections.splice('+idx+',1);renderTempDirections()" style="background:rgba(196,93,74,0.1);color:var(--danger);border:none;border-radius:6px;width:28px;height:28px;cursor:pointer">×</button></div>';}).join('') : '<p style="color:var(--text-secondary);text-align:center">No directions</p>'; }
         function addDirection() { var day = prompt('Which day? (1-5):') || '1'; var step = prompt('Direction:'); if (!step) return; tempDirections.push({id:Date.now(),day:parseInt(day),step:step}); renderTempDirections(); }
 
         function saveRecipe() {
             var name = document.getElementById('recipe-name').value.trim(); if (!name) return alert('Enter name');
             var editId = document.getElementById('edit-recipe-id').value;
-            var data = { id: editId ? parseInt(editId) : Date.now(), name: name, type: document.getElementById('recipe-type').value || 'Bread', days: parseInt(document.getElementById('recipe-days').value), notes: document.getElementById('recipe-notes').value, ingredients: tempIngredients.slice(), directions: tempDirections.slice(), phases: ['mixing','bulk-fermentation','shaping','proofing','baking','completed'] };
+            var data = { id: editId ? parseInt(editId) : Date.now(), name: name, type: document.getElementById('recipe-type').value || 'Bread', days: parseInt(document.getElementById('recipe-days').value), notes: document.getElementById('recipe-notes').value, ingredients: tempIngredients.slice(), directions: tempDirections.slice() };
             if (editId) { var i = appData.recipes.findIndex(function(r){return r.id===parseInt(editId);}); if (i !== -1) appData.recipes[i] = data; }
             else appData.recipes.push(data);
             saveData(); renderRecipes(); closeModal('add-recipe');
@@ -316,9 +438,9 @@
         function viewRecipe(id) {
             var r = appData.recipes.find(function(x){return x.id===id;}); if (!r) return;
             document.getElementById('view-recipe-title').textContent = r.name;
-            var ingHtml = r.ingredients && r.ingredients.length ? r.ingredients.map(function(i){return '<div style="padding:6px 0;color:var(--text)">• <b>'+i.amount+' '+i.unit+'</b> '+i.name+'</div>';}).join('') : '<p style="color:var(--text-secondary)">No ingredients</p>';
-            var dirHtml = r.directions && r.directions.length ? r.directions.map(function(d,i){return '<div style="display:flex;gap:10px;padding:8px 0"><span style="width:24px;height:24px;background:var(--primary);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px">'+(i+1)+'</span><span style="color:var(--text)"><b>Day '+d.day+':</b> '+d.step+'</span></div>';}).join('') : '<p style="color:var(--text-secondary)">No directions</p>';
-            document.getElementById('view-recipe-body').innerHTML = '<div class="detail-section"><h4>Ingredients</h4>'+ingHtml+'</div><div class="detail-section"><h4>Directions</h4>'+dirHtml+'</div>'+(r.notes?'<div class="detail-section"><h4>Notes</h4><p style="color:var(--text)">'+r.notes+'</p></div>':'')+'<div class="detail-section"><h4>Export</h4><button class="btn-secondary" onclick="exportRecipeJSON('+r.id+')">📤 Export as JSON</button></div><button class="btn-primary" onclick="closeModal(\'view-recipe\');editRecipe('+r.id+')">Edit</button><button class="btn-primary" style="background:var(--success)" onclick="closeModal(\'view-recipe\');openModal(\'start-session\');document.getElementById(\'session-recipe\').value='+r.id+'">Start Session</button><button class="btn-danger" onclick="deleteRecipeConfirm('+r.id+')">Delete</button>';
+            var ingHtml = r.ingredients && r.ingredients.length ? r.ingredients.map(function(i){return '<div style="padding:6px 0">• <b>'+i.amount+' '+i.unit+'</b> '+i.name+'</div>';}).join('') : '<p style="color:var(--text-secondary)">No ingredients</p>';
+            var dirHtml = r.directions && r.directions.length ? r.directions.map(function(d,i){return '<div style="display:flex;gap:10px;padding:8px 0"><span style="width:24px;height:24px;background:var(--primary);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px">'+(i+1)+'</span><span><b>Day '+d.day+':</b> '+d.step+'</span></div>';}).join('') : '<p style="color:var(--text-secondary)">No directions</p>';
+            document.getElementById('view-recipe-body').innerHTML = '<div class="detail-section"><h4>Ingredients</h4>'+ingHtml+'</div><div class="detail-section"><h4>Directions</h4>'+dirHtml+'</div>'+(r.notes?'<div class="detail-section"><h4>Notes</h4><p>'+r.notes+'</p></div>':'')+'<button class="btn-primary" onclick="closeModal(\'view-recipe\');editRecipe('+r.id+')">Edit Recipe</button><button class="btn-primary" style="background:var(--success)" onclick="closeModal(\'view-recipe\');openModal(\'start-session\');document.getElementById(\'session-recipe\').value='+r.id+'">Start Session</button><button class="btn-danger" onclick="deleteRecipeConfirm('+r.id+')">Delete Recipe</button>';
             openModal('view-recipe');
         }
         function deleteRecipeConfirm(id) { if(confirm('Delete this recipe?')){appData.recipes=appData.recipes.filter(function(x){return x.id!==id;});saveData();renderRecipes();closeModal('view-recipe');} }
@@ -338,87 +460,16 @@
         }
         function deleteRecipe() { if (!confirm('Delete?')) return; appData.recipes = appData.recipes.filter(function(r){return r.id!==parseInt(document.getElementById('edit-recipe-id').value);}); saveData(); renderRecipes(); closeModal('add-recipe'); }
 
-        // Import/Export Functions
-        function pasteFromClipboard() {
-            navigator.clipboard.readText().then(function(text) {
-                document.getElementById('import-json').value = text;
-            }).catch(function() { alert('Could not access clipboard'); });
-        }
-        function copyTemplate() {
-            var template = '{\n  "name": "Recipe Name",\n  "type": "Sourdough",\n  "days": 2,\n  "ingredients": [\n    {"amount": "500", "unit": "g", "name": "Flour"}\n  ],\n  "directions": [\n    {"day": 1, "step": "Mix ingredients"}\n  ],\n  "notes": "Optional notes"\n}';
-            navigator.clipboard.writeText(template).then(function() { alert('Template copied!'); });
-        }
-        function importRecipes() {
-            var json = document.getElementById('import-json').value.trim();
-            if (!json) return alert('Please paste recipe JSON');
-            try {
-                var data = JSON.parse(json);
-                var recipes = data.recipes ? data.recipes : (Array.isArray(data) ? data : [data]);
-                var count = 0;
-                recipes.forEach(function(r) {
-                    if (r.name) {
-                        appData.recipes.push({
-                            id: Date.now() + count,
-                            name: r.name,
-                            type: r.type || 'Sourdough',
-                            days: r.days || 2,
-                            ingredients: (r.ingredients || []).map(function(i, idx) { return {id: Date.now()+idx, amount: i.amount, unit: i.unit, name: i.name}; }),
-                            directions: (r.directions || []).map(function(d, idx) { return {id: Date.now()+idx+100, day: d.day, step: d.step}; }),
-                            phases: r.phases || ['mixing','bulk-fermentation','shaping','proofing','baking','completed'],
-                            notes: r.notes || ''
-                        });
-                        count++;
-                    }
-                });
-                saveData();
-                renderRecipes();
-                closeModal('import-recipe');
-                alert('Imported ' + count + ' recipe(s)!');
-            } catch(e) { alert('Invalid JSON format: ' + e.message); }
-        }
-        function exportRecipeJSON(id) {
-            var r = appData.recipes.find(function(x){return x.id===id;});
-            if (!r) return;
-            var exportData = {
-                name: r.name,
-                type: r.type,
-                days: r.days,
-                ingredients: r.ingredients.map(function(i) { return {amount: i.amount, unit: i.unit, name: i.name}; }),
-                directions: r.directions.map(function(d) { return {day: d.day, step: d.step}; }),
-                phases: r.phases,
-                notes: r.notes
-            };
-            var json = JSON.stringify(exportData, null, 2);
-            downloadFile(json, r.name.replace(/\s+/g, '_') + '.json', 'application/json');
-        }
-        function exportAllRecipes() {
-            if (!appData.recipes.length) return alert('No recipes to export');
-            var exportData = {
-                recipes: appData.recipes.map(function(r) {
-                    return {
-                        name: r.name,
-                        type: r.type,
-                        days: r.days,
-                        ingredients: r.ingredients.map(function(i) { return {amount: i.amount, unit: i.unit, name: i.name}; }),
-                        directions: r.directions.map(function(d) { return {day: d.day, step: d.step}; }),
-                        phases: r.phases,
-                        notes: r.notes
-                    };
-                })
-            };
-            var json = JSON.stringify(exportData, null, 2);
-            downloadFile(json, 'all_recipes.json', 'application/json');
-        }
-        function downloadFile(content, filename, type) {
-            var blob = new Blob([content], {type: type});
+        function importRecipes() { alert('Import feature: In the iOS app, you can import recipes from JSON files. This web demo has limited import functionality.'); }
+        function exportRecipes() {
+            if (!appData.recipes.length) { alert('No recipes to export'); return; }
+            var data = JSON.stringify({recipes: appData.recipes}, null, 2);
+            var blob = new Blob([data], {type: 'application/json'});
             var url = URL.createObjectURL(blob);
             var a = document.createElement('a');
             a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
+            a.download = 'recipes.json';
             a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
         }
 
         function startSession() {
@@ -427,10 +478,8 @@
             var recipe = appData.recipes.find(function(r){return r.id===recipeId;});
             var starter = starterId ? appData.starters.find(function(s){return s.id===starterId;}) : null;
             if (!recipe) return alert('Select recipe');
-            var session = { id: Date.now(), recipeId: recipeId, recipeName: recipe.name, starterId: starterId, starterName: starter ? starter.name : null, startDate: new Date().toISOString(), currentDay: 1, currentPhase: 'mixing', phaseStartTime: new Date().toISOString(), isActive: true, checkedIngredients: [], checkedSteps: [], notes: defaultNotesTemplate };
-            appData.sessions.push(session);
+            appData.sessions.push({ id: Date.now(), recipeId: recipeId, recipeName: recipe.name, recipeDays: recipe.days, starterId: starterId, starterName: starter ? starter.name : null, startDate: new Date().toISOString(), currentDay: 1, currentPhase: 'mixing', phaseStartTime: new Date().toISOString(), isActive: true, checkedIngredients: [], checkedSteps: [] });
             saveData(); renderSessions(); closeModal('start-session'); switchTab('sessions');
-            openSessionDetail(session.id);
         }
         function openSessionDetail(id) {
             var s = appData.sessions.find(function(x){return x.id===id;}); if (!s) return;
@@ -447,12 +496,13 @@
                 dirHtml = recipe.directions.map(function(d,i){ var chk = s.checkedSteps && s.checkedSteps.indexOf(d.id) !== -1; return '<div class="check-item '+(chk?'checked':'')+'" onclick="toggleStep('+s.id+','+d.id+')"><span class="check-icon">'+(chk?'☑':'☐')+'</span><span class="check-text"><b>Day '+d.day+', Step '+(i+1)+':</b> '+d.step+'</span></div>'; }).join('');
             }
             var phaseButtons = phases.map(function(p){return '<button onclick="updatePhase('+s.id+',\''+p+'\')" style="padding:8px 12px;border-radius:20px;border:none;cursor:pointer;font-size:12px;background:'+(s.currentPhase===p?'var(--primary)':'var(--bg)')+';color:'+(s.currentPhase===p?'white':'var(--text-secondary)')+'">'+getPhaseIcon(p)+'</button>';}).join('');
-            var dayButtons = [1,2,3,4,5].map(function(d){return '<button onclick="updateDay('+s.id+','+d+')" style="width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;background:'+(d===s.currentDay?'var(--primary)':'var(--bg)')+';color:'+(d===s.currentDay?'white':'var(--text)')+'">'+d+'</button>';}).join('');
-            document.getElementById('session-detail-body').innerHTML = (s.isActive?'<div class="timer-badge">In '+s.currentPhase+' for: <b>'+phaseTime+'</b></div>':'')+'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">'+phaseButtons+'</div><div class="detail-section"><h4>Day '+s.currentDay+'</h4><div style="display:flex;gap:8px;margin-top:8px">'+dayButtons+'</div></div><div class="detail-section"><h4>Ingredients <span style="font-weight:normal;font-size:12px;color:var(--text-secondary)">(tap to check)</span></h4>'+ingHtml+'</div><div class="detail-section"><h4>Directions <span style="font-weight:normal;font-size:12px;color:var(--text-secondary)">(tap to check)</span></h4>'+dirHtml+'</div><div class="detail-section"><h4>Session Notes</h4><textarea class="form-input" style="min-height:200px;font-size:14px" onchange="updateSessionNotes('+s.id+',this.value)">'+escapeHtml(s.notes||'')+'</textarea></div>'+(s.isActive?'<button class="btn-primary" style="background:var(--success)" onclick="completeSession('+s.id+')">Complete Session</button>':'')+'<button class="btn-danger" onclick="deleteSessionConfirm('+s.id+')">Delete Session</button>';
+            var dayButtons = [];
+            for (var d = 1; d <= s.recipeDays; d++) {
+                dayButtons.push('<button onclick="updateDay('+s.id+','+d+')" style="width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;background:'+(d===s.currentDay?'var(--primary)':'var(--bg)')+';color:'+(d===s.currentDay?'white':'var(--text)')+'">'+d+'</button>');
+            }
+            document.getElementById('session-detail-body').innerHTML = (s.isActive?'<div class="timer-badge">⏱️ In '+s.currentPhase+' for: <b>'+phaseTime+'</b></div>':'')+'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">'+phaseButtons+'</div><div class="detail-section"><h4>Day '+s.currentDay+' of '+s.recipeDays+'</h4><div style="display:flex;gap:8px;margin-top:8px">'+dayButtons.join('')+'</div></div><div class="detail-section"><h4>Ingredients <span style="font-weight:normal;font-size:12px;color:var(--text-secondary)">(tap to check)</span></h4>'+ingHtml+'</div><div class="detail-section"><h4>Directions <span style="font-weight:normal;font-size:12px;color:var(--text-secondary)">(tap to check)</span></h4>'+dirHtml+'</div>'+(s.isActive?'<button class="btn-primary" style="background:var(--success)" onclick="completeSession('+s.id+')">Complete Session</button>':'')+'<button class="btn-danger" onclick="deleteSessionConfirm('+s.id+')">Delete Session</button>';
             openModal('session-detail');
         }
-        function escapeHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-        function updateSessionNotes(id, notes) { var s = appData.sessions.find(function(x){return x.id===id;}); if (s) { s.notes = notes; saveData(); } }
         function deleteSessionConfirm(id) { if(confirm('Delete this session?')){appData.sessions=appData.sessions.filter(function(x){return x.id!==id;});saveData();renderSessions();closeModal('session-detail');} }
         function toggleIngredient(sid, iid) { var s = appData.sessions.find(function(x){return x.id===sid;}); if (!s) return; if (!s.checkedIngredients) s.checkedIngredients = []; var idx = s.checkedIngredients.indexOf(iid); if (idx === -1) s.checkedIngredients.push(iid); else s.checkedIngredients.splice(idx,1); saveData(); openSessionDetail(sid); }
         function toggleStep(sid, did) { var s = appData.sessions.find(function(x){return x.id===sid;}); if (!s) return; if (!s.checkedSteps) s.checkedSteps = []; var idx = s.checkedSteps.indexOf(did); if (idx === -1) s.checkedSteps.push(did); else s.checkedSteps.splice(idx,1); saveData(); openSessionDetail(sid); }
@@ -481,19 +531,10 @@
             var html = '<h4 style="font-family:Fraunces,serif;margin-bottom:12px">'+selectedDate.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})+'</h4>';
             if (!events.feedingStarters.length && !events.sessions.length) html += '<p style="color:var(--text-secondary)">No events on this day</p>';
             else {
-                events.feedingStarters.forEach(function(s){ html += '<div class="event-card" onclick="openStarterDetail('+s.id+')" style="background:rgba(212,169,74,0.1)"><span style="font-size:20px">🫙</span><div style="flex:1"><b>'+s.name+'</b><br><span style="font-size:13px;color:var(--text-secondary)">Feed starter</span></div><span style="color:var(--text-secondary)">›</span></div>'; });
+                events.feedingStarters.forEach(function(s){ html += '<div class="event-card" onclick="openFeedModal('+s.id+')" style="background:rgba(212,169,74,0.1)"><span style="font-size:20px">⭕</span><div style="flex:1"><b>'+s.name+'</b><br><span style="font-size:13px;color:var(--text-secondary)">Feed starter</span></div><span style="color:var(--text-secondary)">›</span></div>'; });
                 events.sessions.forEach(function(s){ html += '<div class="event-card" onclick="openSessionDetail('+s.id+')" style="background:rgba(212,133,74,0.1)"><span style="font-size:20px">'+getPhaseIcon(s.currentPhase)+'</span><div style="flex:1"><b>'+s.recipeName+'</b><br><span style="font-size:13px;color:var(--text-secondary)">'+(s.isActive?'Day '+s.currentDay+' - '+s.currentPhase:'Completed')+'</span></div><span style="color:var(--text-secondary)">›</span></div>'; });
             }
             c.innerHTML = html;
-        }
-        function openStarterDetail(id) {
-            var s = appData.starters.find(function(x){return x.id===id;}); if (!s) return;
-            document.getElementById('starter-detail-title').textContent = s.name;
-            var days = s.lastFed ? Math.floor((Date.now() - new Date(s.lastFed+'T00:00:00').getTime()) / 86400000) : null;
-            var fedStr = s.lastFed ? new Date(s.lastFed+'T00:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : 'Never';
-            var locName = s.location.charAt(0).toUpperCase() + s.location.slice(1);
-            document.getElementById('starter-detail-body').innerHTML = '<div style="text-align:center;padding:20px"><span style="font-size:48px">🫙</span><h2 style="margin-top:12px">'+s.name+'</h2><p style="color:var(--text-secondary)">'+locName+'</p></div><div class="detail-section"><h4>Status</h4><p style="color:var(--text)"><b>Last Fed:</b> '+fedStr+'</p>'+(days!==null?'<p style="color:var(--text)"><b>Days Since:</b> '+days+' days</p>':'')+'</div>'+(s.notes?'<div class="detail-section"><h4>Notes</h4><p style="color:var(--text)">'+s.notes+'</p></div>':'')+(s.location!=='dried'?'<button class="btn-primary" style="background:var(--success)" onclick="feedStarter('+s.id+');closeModal(\'starter-detail\');renderCalendar()">Mark as Fed</button>':'')+'<button class="btn-primary" onclick="closeModal(\'starter-detail\');editStarter('+s.id+')">Edit Starter</button>';
-            openModal('starter-detail');
         }
         function getEventsForDate(date) {
             var feedingStarters = appData.starters.filter(function(s) { if (s.location === 'dried' || !s.lastFed) return false; var next = new Date(s.lastFed+'T00:00:00'); next.setDate(next.getDate() + (s.location === 'refrigerator' ? 7 : 1)); return isSameDay(next,date); });
