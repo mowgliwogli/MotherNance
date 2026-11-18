@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mother Nance - Sourdough Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #D4854A; --primary-dark: #B86B32; --primary-light: #F5DCC8; --bg: #FDF8F3; --bg-card: #FFFFFF; --text: #2D2418; --text-secondary: #7A6F61; --success: #5D8C4A; --warning: #D4A94A; --danger: #C45D4A; --border: #E8DFD4; --shadow: 0 2px 12px rgba(45, 36, 24, 0.08); --radius: 16px; --radius-sm: 10px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+        .app-container { max-width: 430px; margin: 0 auto; min-height: 100vh; background: var(--bg); padding-bottom: 90px; }
+        .header { padding: 20px 24px 16px; background: var(--bg); position: sticky; top: 0; z-index: 100; }
+        .header h1 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
+        .header h1 .logo { width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .tab-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 430px; background: var(--bg-card); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 12px 24px; z-index: 1000; }
+        .tab-btn { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 12px; border: none; background: none; color: var(--text-secondary); cursor: pointer; }
+        .tab-btn.active { color: var(--primary); }
+        .tab-btn svg { width: 24px; height: 24px; }
+        .tab-btn span { font-size: 11px; font-weight: 600; }
+        .content { padding: 0 20px 20px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .card { background: var(--bg-card); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid var(--border); cursor: pointer; }
+        .starter-card, .session-card { display: flex; align-items: center; gap: 14px; }
+        .starter-status { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+        .starter-status.good { background: var(--success); }
+        .starter-status.warning { background: var(--warning); }
+        .starter-status.danger { background: var(--danger); }
+        .starter-icon, .session-phase { width: 44px; height: 44px; background: var(--primary-light); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; overflow: hidden; }
+        .starter-icon img { width: 100%; height: 100%; object-fit: cover; }
+        .starter-info, .session-info, .recipe-info { flex: 1; }
+        .starter-name, .session-name, .recipe-name { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
+        .starter-meta, .session-meta { font-size: 13px; color: var(--text-secondary); display: flex; gap: 8px; flex-wrap: wrap; }
+        .phase-time { color: var(--primary); font-weight: 500; }
+        .fed-btn { padding: 8px 16px; background: rgba(93, 140, 74, 0.12); color: var(--success); border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .section-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; }
+        .add-btn { width: 36px; height: 36px; background: var(--primary); color: white; border: none; border-radius: 10px; font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .recipe-card { display: flex; gap: 14px; }
+        .recipe-thumb { width: 70px; height: 70px; background: linear-gradient(135deg, var(--primary-light), #E8D4C4); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; overflow: hidden; }
+        .recipe-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .tag { padding: 4px 10px; background: var(--bg); border-radius: 6px; font-size: 12px; color: var(--text-secondary); display: inline-block; }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: flex-end; justify-content: center; z-index: 2000; opacity: 0; visibility: hidden; transition: all 0.3s; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal { background: var(--bg-card); border-radius: 24px 24px 0 0; width: 100%; max-width: 430px; max-height: 90vh; overflow-y: auto; transform: translateY(100%); transition: transform 0.3s; }
+        .modal-overlay.active .modal { transform: translateY(0); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg-card); z-index: 10; }
+        .modal-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; }
+        .modal-close { width: 32px; height: 32px; background: var(--bg); border: none; border-radius: 8px; cursor: pointer; font-size: 18px; }
+        .modal-body { padding: 20px 24px; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+        .form-input, .form-select { width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 16px; font-family: inherit; background: var(--bg); }
+        textarea.form-input { min-height: 80px; resize: vertical; }
+        .btn-primary { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: var(--radius-sm); font-size: 16px; font-weight: 600; cursor: pointer; margin-bottom: 10px; }
+        .btn-secondary { width: 100%; padding: 12px; background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; cursor: pointer; margin-bottom: 10px; }
+        .btn-danger { width: 100%; padding: 16px; background: rgba(196, 93, 74, 0.1); color: var(--danger); border: none; border-radius: var(--radius-sm); font-size: 16px; font-weight: 600; cursor: pointer; }
+        .toggle-group { display: flex; background: var(--bg); border-radius: var(--radius-sm); padding: 4px; }
+        .toggle-option { flex: 1; padding: 12px; border: none; background: none; font-size: 14px; font-weight: 500; cursor: pointer; border-radius: 8px; color: var(--text-secondary); }
+        .toggle-option.active { background: var(--bg-card); color: var(--text); box-shadow: var(--shadow); }
+        .detail-section { background: var(--bg); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 16px; }
+        .detail-section h4 { font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+        .check-item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; cursor: pointer; border-bottom: 1px solid var(--border); }
+        .check-item:last-child { border-bottom: none; }
+        .check-item.checked .check-text { text-decoration: line-through; color: var(--text-secondary); }
+        .check-icon { font-size: 20px; flex-shrink: 0; }
+        .check-text { flex: 1; line-height: 1.4; }
+        .timer-badge { display: inline-flex; flex-direction: column; padding: 10px 14px; background: rgba(212,133,74,0.1); border-radius: 8px; font-size: 14px; color: var(--primary); margin-bottom: 8px; }
+        .phase-log { background: var(--bg-card); border-radius: 8px; font-size: 13px; }
+        .phase-log-item { display: flex; align-items: center; gap: 8px; padding: 12px; border-bottom: 1px solid var(--border); }
+        .phase-log-item:last-child { border-bottom: none; }
+        .phase-log-info { flex: 1; }
+        .phase-log-times { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+        .phase-log-times input[type="datetime-local"] { font-size: 14px; padding: 6px 10px; border: 1px solid var(--border); border-radius: 4px; width: 100%; max-width: 220px; }
+        .phase-log-delete { width: 28px; height: 28px; background: rgba(196,93,74,0.1); color: var(--danger); border: none; border-radius: 6px; cursor: pointer; font-size: 16px; flex-shrink: 0; }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .calendar-nav button { width: 36px; height: 36px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; font-size: 18px; }
+        .calendar-month { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+        .calendar-day-header { text-align: center; font-size: 12px; font-weight: 600; color: var(--text-secondary); padding: 8px 0; }
+        .calendar-day { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border-radius: 10px; cursor: pointer; font-size: 14px; gap: 2px; }
+        .calendar-day:hover { background: var(--bg-card); }
+        .calendar-day.today { border: 2px solid var(--primary); }
+        .calendar-day.selected { background: rgba(212, 133, 74, 0.15); }
+        .calendar-dots { display: flex; gap: 3px; }
+        .calendar-dot { width: 5px; height: 5px; border-radius: 50%; }
+        .calendar-dot.feeding { background: var(--warning); }
+        .calendar-dot.session { background: var(--primary); }
+        .event-card { padding: 12px; background: var(--bg); border-radius: 10px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .event-card:hover { background: var(--border); }
+        .empty-state { text-align: center; padding: 40px 20px; }
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border-radius: 28px; }
+        .slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(22px); }
+        .setting-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .setting-row:last-child { border-bottom: none; }
+        .photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+        .photo-item { aspect-ratio: 1; border-radius: 8px; overflow: hidden; position: relative; }
+        .photo-item img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-item .delete-photo { position: absolute; top: 4px; right: 4px; width: 24px; height: 24px; background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 14px; }
+        .photo-item .set-main-photo { position: absolute; bottom: 4px; left: 4px; padding: 2px 6px; background: rgba(0,0,0,0.5); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 10px; }
+        .photo-item.main-photo { border: 3px solid var(--primary); }
+        .photo-item.main-photo .set-main-photo { background: var(--primary); }
+        .add-photo-btn { aspect-ratio: 1; border: 2px dashed var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 24px; color: var(--text-secondary); }
+        .editable-title { border: none; background: transparent; font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; width: 100%; padding: 4px 0; border-bottom: 1px dashed var(--border); }
+        .editable-title:focus { outline: none; border-bottom-color: var(--primary); }
+        #session-notes-editor b { font-weight: 600; color: var(--text); }
+        #session-notes-editor:focus { border-color: var(--primary); }
+        #session-notes-editor .section-header { font-weight: 700; text-decoration: underline; font-size: 18px; }
+        #session-notes-editor .field-label { font-weight: 600; font-size: 16px; }
+        .session-link { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: var(--bg); border-radius: 8px; margin-bottom: 6px; cursor: pointer; font-size: 13px; }
+        .session-link:hover { background: var(--border); }
+        .starter-photo-upload { width: 80px; height: 80px; border-radius: 12px; overflow: hidden; margin: 0 auto 16px; position: relative; cursor: pointer; background: var(--primary-light); display: flex; align-items: center; justify-content: center; }
+        .starter-photo-upload img { width: 100%; height: 100%; object-fit: cover; }
+        .starter-photo-upload .upload-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.5); color: white; font-size: 10px; text-align: center; padding: 4px; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header"><h1><span class="logo">🍞</span>Mother Nance</h1></header>
+        <main class="content">
+            <div id="starters-tab" class="tab-content active">
+                <div class="section-header"><h2 class="section-title">My Starters</h2><button class="add-btn" onclick="openModal('add-starter')">+</button></div>
+                <div id="starters-list"></div>
+            </div>
+            <div id="recipes-tab" class="tab-content">
+                <div class="section-header"><h2 class="section-title">Recipes</h2><button class="add-btn" onclick="openModal('add-recipe')">+</button></div>
+                <div id="recipes-list"></div>
+            </div>
+            <div id="sessions-tab" class="tab-content">
+                <div class="section-header"><h2 class="section-title">Sessions</h2><div style="display:flex;gap:8px"><button class="add-btn" style="background:var(--bg);color:var(--text);border:1px solid var(--border);font-size:14px" onclick="exportAllSessions()" title="Export All">↓</button><button class="add-btn" onclick="openModal('start-session')">+</button></div></div>
+                <div id="sessions-list"></div>
+            </div>
+            <div id="calendar-tab" class="tab-content">
+                <div class="calendar-header"><div class="calendar-nav"><button onclick="changeMonth(-1)">&lt;</button></div><span class="calendar-month" id="calendar-month"></span><div class="calendar-nav"><button onclick="changeMonth(1)">&gt;</button></div></div>
+                <div class="calendar-grid" id="calendar-grid"></div>
+                <div id="calendar-events" style="margin-top: 20px;"></div>
+            </div>
+        </main>
+        <nav class="tab-nav">
+            <button class="tab-btn active" onclick="switchTab('starters')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg><span>Starters</span></button>
+            <button class="tab-btn" onclick="switchTab('recipes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Recipes</span></button>
+            <button class="tab-btn" onclick="switchTab('sessions')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Sessions</span></button>
+            <button class="tab-btn" onclick="switchTab('calendar')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>Calendar</span></button>
+        </nav>
+    </div>
+
+    <div class="modal-overlay" id="add-starter-modal"><div class="modal"><div class="modal-header"><h3 class="modal-title" id="starter-modal-title">Add Starter</h3><button class="modal-close" onclick="closeModal('add-starter')">&times;</button></div><div class="modal-body">
+        <input type="hidden" id="edit-starter-id">
+        <div class="form-group" style="text-align:center">
+            <label class="starter-photo-upload" id="starter-photo-preview">
+                <span id="starter-photo-letter">S</span>
+                <input type="file" accept="image/*" style="display:none" id="starter-photo-input" onchange="uploadStarterPhoto(this)">
+                <div class="upload-overlay">Tap to upload</div>
+            </label>
+        </div>
+        <div class="form-group"><label class="form-label">Name</label><input type="text" class="form-input" id="starter-name" placeholder="e.g., Nancy" oninput="updateStarterPhotoLetter()"></div>
+        <div class="form-group"><label class="form-label">Location</label><div class="toggle-group"><button class="toggle-option active" data-value="refrigerator" onclick="selectLocation(this)">Refrigerator</button><button class="toggle-option" data-value="countertop" onclick="selectLocation(this)">Countertop</button><button class="toggle-option" data-value="dried" onclick="selectLocation(this)">Dried</button></div></div>
+        <div class="form-group" id="fed-date-group"><label class="form-label">Last Fed Date</label><input type="date" class="form-input" id="starter-last-fed"></div>
+        <div id="notification-settings" class="detail-section">
+            <h4>Notification Settings</h4>
+            <div class="setting-row"><span>Enable Notifications</span><label class="switch"><input type="checkbox" id="starter-notifications" checked onchange="toggleNotificationSettings()"><span class="slider"></span></label></div>
+            <div id="notification-options">
+                <div class="setting-row"><span>Feeding Interval</span><select class="form-select" id="starter-interval" style="width:auto" onchange="toggleCustomInterval()"><option value="default">Default</option><option value="custom">Custom</option></select></div>
+                <div id="custom-interval-row" class="setting-row" style="display:none"><span>Custom Hours</span><input type="number" class="form-input" id="starter-custom-hours" style="width:80px;text-align:center" min="1" max="720" value="24"></div>
+                <div class="setting-row"><span>Notification Time</span><input type="time" class="form-input" id="starter-notify-time" style="width:auto" value="09:00"></div>
+            </div>
+            <p style="font-size:12px;color:var(--text-secondary);margin-top:8px"><span id="interval-display">Default: Refrigerator = every 7 days, Countertop = every day</span></p>
+        </div>
+        <div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="starter-notes"></textarea></div>
+        <button class="btn-primary" onclick="saveStarter()">Save Starter</button>
+        <button class="btn-danger" id="delete-starter-btn" style="display:none" onclick="deleteStarter()">Delete Starter</button>
+    </div></div></div>
+
+    <div class="modal-overlay" id="add-recipe-modal"><div class="modal"><div class="modal-header"><h3 class="modal-title" id="recipe-modal-title">Add Recipe</h3><button class="modal-close" onclick="closeModal('add-recipe')">&times;</button></div><div class="modal-body">
+        <div class="form-group" id="copy-from-group"><label class="form-label">Copy From Existing Recipe</label><select class="form-select" id="copy-from-recipe" onchange="copyFromRecipe()"><option value="">-- Start Fresh --</option></select></div>
+        <div class="form-group"><label class="form-label">Recipe Name</label><input type="text" class="form-input" id="recipe-name"></div>
+        <div class="form-group"><label class="form-label">Bread Type</label><input type="text" class="form-input" id="recipe-type" placeholder="e.g., Sourdough"></div>
+        <div class="form-group"><label class="form-label">Number of Days</label><select class="form-select" id="recipe-days"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select></div>
+        <div class="form-group"><label class="form-label">Ingredients</label><div id="ingredients-list" style="background:var(--bg);border-radius:10px;padding:12px;margin-bottom:8px;min-height:50px"></div><button type="button" class="btn-secondary" onclick="addIngredient()">+ Add Ingredient</button></div>
+        <div class="form-group"><label class="form-label">Directions</label><div id="directions-list" style="background:var(--bg);border-radius:10px;padding:12px;margin-bottom:8px;min-height:50px"></div><button type="button" class="btn-secondary" onclick="addDirection()">+ Add Step</button></div>
+        <div class="form-group"><label class="form-label">Session Phases/Statuses</label><div id="phases-list" style="background:var(--bg);border-radius:10px;padding:12px;margin-bottom:8px;min-height:50px"></div><button type="button" class="btn-secondary" onclick="addPhase()">+ Add Phase</button><p style="font-size:12px;color:var(--text-secondary);margin-top:8px">"completed" is always added as the final phase</p></div>
+        <div class="form-group"><label class="form-label">Photos</label><div class="photo-grid" id="recipe-photos"></div></div>
+        <div class="form-group"><label class="form-label">Notes</label><textarea class="form-input" id="recipe-notes"></textarea></div>
+        <button class="btn-primary" onclick="saveRecipe()">Save Recipe</button>
+        <button class="btn-danger" id="delete-recipe-btn" style="display:none" onclick="deleteRecipe()">Delete Recipe</button>
+    </div></div></div>
+
+    <div class="modal-overlay" id="view-recipe-modal"><div class="modal"><div class="modal-header"><h3 class="modal-title" id="view-recipe-title">Recipe</h3><button class="modal-close" onclick="closeModal('view-recipe')">&times;</button></div><div class="modal-body" id="view-recipe-body"></div></div></div>
+    <div class="modal-overlay" id="start-session-modal"><div class="modal"><div class="modal-header"><h3 class="modal-title">Start Session</h3><button class="modal-close" onclick="closeModal('start-session')">&times;</button></div><div class="modal-body">
+        <div class="form-group"><label class="form-label">Select Recipe</label><select class="form-select" id="session-recipe"></select></div>
+        <div class="form-group"><label class="form-label">Select Starter (Optional)</label><select class="form-select" id="session-starter"><option value="">None</option></select></div>
+        <button class="btn-primary" onclick="startSession()">Start Baking</button>
+    </div></div></div>
+    <div class="modal-overlay" id="session-detail-modal"><div class="modal"><div class="modal-header"><h3 class="modal-title" id="session-detail-title">Session</h3><button class="modal-close" onclick="closeModal('session-detail')">&times;</button></div><div class="modal-body" id="session-detail-body"></div></div></div>
+    <div class="modal-overlay" id="starter-detail-modal"><div class="modal"><div class="modal-header"><h3 class="modal-title" id="starter-detail-title">Starter</h3><button class="modal-close" onclick="closeModal('starter-detail')">&times;</button></div><div class="modal-body" id="starter-detail-body"></div></div></div>
+
+    <script>
+        var appData = { starters: [], recipes: [], sessions: [] };
+        var currentMonth = new Date();
+        var selectedDate = new Date();
+        var selectedLocation = 'refrigerator';
+        var tempIngredients = [];
+        var tempDirections = [];
+        var tempPhotos = [];
+        var tempMainPhotoIndex = -1;
+        var tempStarterPhoto = null;
+        var DEFAULT_PHASES = ['mixing', 'bulk-fermentation', 'shaping', 'proofing', 'baking', 'completed'];
+        var tempPhases = [];
+        var editingRecipeId = null;
+        var scheduledNotifications = {};
+        var sessionTimerInterval = null;
+
+        var SESSION_NOTES_TEMPLATE = "<span class='section-header'>DAY NOTES:</span> <br><br><span class='section-header'>MIXING:</span><br>&nbsp;&nbsp;<span class='field-label'>Starter characteristics:</span> <br>&nbsp;&nbsp;<span class='field-label'>Room temperature:</span> <br>&nbsp;&nbsp;<span class='field-label'>Water temperature:</span> <br>&nbsp;&nbsp;<span class='field-label'>Temperature of dough at end of mixing:</span> <br>&nbsp;&nbsp;<span class='field-label'>Dough characteristics:</span> <br><br><span class='section-header'>FERMENTATION:</span><br>&nbsp;&nbsp;<span class='field-label'>Start time of fermentation:</span> <br>&nbsp;&nbsp;<span class='field-label'>Room or refrigerator temperature during fermentation:</span> <br>&nbsp;&nbsp;<span class='field-label'>Dough temperature at end of fermentation:</span> <br>&nbsp;&nbsp;<span class='field-label'>End time of fermentation:</span> <br>&nbsp;&nbsp;<span class='field-label'>Dough characteristics:</span> <br><br><span class='section-header'>SHAPING:</span><br>&nbsp;&nbsp;<span class='field-label'>Time shaped:</span> <br>&nbsp;&nbsp;<span class='field-label'>Dough characteristics:</span> <br><br><span class='section-header'>PROOFING:</span><br>&nbsp;&nbsp;<span class='field-label'>Start time of proofing:</span> <br>&nbsp;&nbsp;<span class='field-label'>Room or refrigerator temperature during proofing:</span> <br>&nbsp;&nbsp;<span class='field-label'>Dough temperature at end of proofing:</span> <br>&nbsp;&nbsp;<span class='field-label'>End time of proofing:</span> <br>&nbsp;&nbsp;<span class='field-label'>Dough characteristics:</span> <br><br><span class='section-header'>BAKING:</span><br>&nbsp;&nbsp;<span class='field-label'>Oven temperature:</span> <br>&nbsp;&nbsp;<span class='field-label'>Baking time:</span> <br><br><span class='section-header'>AFTER-BAKE:</span><br>&nbsp;&nbsp;<span class='field-label'>Crust color:</span> <br>&nbsp;&nbsp;<span class='field-label'>Shape:</span> <br>&nbsp;&nbsp;<span class='field-label'>Volume:</span> <br>&nbsp;&nbsp;<span class='field-label'>Aroma:</span> <br>&nbsp;&nbsp;<span class='field-label'>Interior hole structure:</span> <br>&nbsp;&nbsp;<span class='field-label'>Taste:</span> <br><br><span class='section-header'>COMMENTS:</span> ";
+
+        function loadData() {
+            var saved = localStorage.getItem('mothernance_data');
+            if (saved) appData = JSON.parse(saved);
+            if (!appData.starters.length) appData.starters = [{ id: 1, name: 'Nancy', location: 'refrigerator', lastFed: new Date(Date.now() - 5*86400000).toISOString().split('T')[0], notes: 'Main starter', notificationsEnabled: true, useCustomInterval: false, customIntervalHours: 24, notifyTime: '09:00', photo: null }];
+            if (!appData.recipes.length) appData.recipes = [{ id: 1, name: 'Country Loaf', type: 'Sourdough', days: 2, ingredients: [{id:1,amount:'500',unit:'g',name:'Bread Flour'},{id:2,amount:'350',unit:'g',name:'Water'},{id:3,amount:'100',unit:'g',name:'Starter'},{id:4,amount:'10',unit:'g',name:'Salt'}], directions: [{id:1,day:1,step:'Mix flour and water, autolyse 30 min'},{id:2,day:1,step:'Add starter and salt, mix well'},{id:3,day:1,step:'Bulk ferment 4-6 hours with folds'},{id:4,day:2,step:'Preheat oven to 500F'},{id:5,day:2,step:'Bake covered 20 min, uncovered 25 min'}], photos: [], mainPhotoIndex: -1 }];
+            saveData();
+            requestNotificationPermission();
+            scheduleAllNotifications();
+        }
+        
+        function saveData() { localStorage.setItem('mothernance_data', JSON.stringify(appData)); }
+        function requestNotificationPermission() { if ('Notification' in window && Notification.permission !== 'denied') Notification.requestPermission(); }
+        function getIntervalHours(starter) { if (starter.useCustomInterval && starter.customIntervalHours) return starter.customIntervalHours; return starter.location === 'refrigerator' ? 168 : 24; }
+        function getNextFeedingDate(starter) { if (!starter.lastFed || starter.location === 'dried') return null; var lastFed = new Date(starter.lastFed + 'T00:00:00'); var nextDate = new Date(lastFed.getTime() + getIntervalHours(starter) * 3600000); if (starter.notifyTime) { var t = starter.notifyTime.split(':'); nextDate.setHours(parseInt(t[0]), parseInt(t[1]), 0, 0); } return nextDate; }
+        function formatInterval(hours) { if (hours >= 24 && hours % 24 === 0) { var d = hours / 24; return d === 1 ? 'every day' : 'every ' + d + ' days'; } return 'every ' + hours + ' hour' + (hours > 1 ? 's' : ''); }
+        function formatShortDate(date) { return new Date(date).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: '2-digit'}); }
+        function formatDateTime(date) { return new Date(date).toLocaleString('en-US', {month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'}); }
+        function formatDuration(mins) { return mins >= 60 ? Math.floor(mins/60)+'h '+mins%60+'m' : mins+'m'; }
+        function toLocalDatetimeString(date) { var d = new Date(date); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0') + 'T' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0'); }
+
+        function scheduleNotification(starter) { if (!starter.notificationsEnabled || starter.location === 'dried') return; if (!('Notification' in window) || Notification.permission !== 'granted') return; if (scheduledNotifications[starter.id]) clearTimeout(scheduledNotifications[starter.id]); var nextFeeding = getNextFeedingDate(starter); if (!nextFeeding) return; var delay = nextFeeding.getTime() - Date.now(); if (delay > 0) { scheduledNotifications[starter.id] = setTimeout(function() { new Notification('Time to Feed ' + starter.name + '!', { body: 'Your ' + starter.location + ' starter needs feeding.', tag: 'starter-' + starter.id }); }, delay); } }
+        function scheduleAllNotifications() { appData.starters.forEach(scheduleNotification); }
+        function toggleNotificationSettings() { document.getElementById('notification-options').style.display = document.getElementById('starter-notifications').checked ? 'block' : 'none'; }
+        function toggleCustomInterval() { document.getElementById('custom-interval-row').style.display = document.getElementById('starter-interval').value === 'custom' ? 'flex' : 'none'; updateIntervalDisplay(); }
+        function updateIntervalDisplay() { var loc = selectedLocation, interval = document.getElementById('starter-interval').value; var el = document.getElementById('interval-display'); if (loc === 'dried') el.textContent = 'Dried starters do not need feeding'; else if (interval === 'custom') el.textContent = 'Custom: ' + formatInterval(parseInt(document.getElementById('starter-custom-hours').value) || 24); else el.textContent = 'Default: Refrigerator = every 7 days, Countertop = every day'; }
+        function updateStarterPhotoLetter() { var name = document.getElementById('starter-name').value.trim(); var letterEl = document.getElementById('starter-photo-letter'); if (letterEl && !tempStarterPhoto) letterEl.textContent = name ? name.charAt(0).toUpperCase() : 'S'; }
+        function uploadStarterPhoto(input) { if (input.files && input.files[0]) { var reader = new FileReader(); reader.onload = function(e) { tempStarterPhoto = e.target.result; document.getElementById('starter-photo-preview').innerHTML = '<img src="'+tempStarterPhoto+'"><input type="file" accept="image/*" style="display:none" onchange="uploadStarterPhoto(this)"><div class="upload-overlay">Tap to change</div>'; }; reader.readAsDataURL(input.files[0]); } }
+
+        function switchTab(t) { 
+            document.querySelectorAll('.tab-content').forEach(function(e) { e.classList.remove('active'); }); 
+            document.querySelectorAll('.tab-btn').forEach(function(e) { e.classList.remove('active'); }); 
+            document.getElementById(t + '-tab').classList.add('active'); 
+            document.querySelectorAll('.tab-btn')[['starters','recipes','sessions','calendar'].indexOf(t)].classList.add('active'); 
+            if (t === 'calendar') renderCalendar();
+            if (t === 'sessions') {
+                renderSessions();
+            } else {
+                stopSessionTimer();
+            }
+        }
+
+        function renderStarters() {
+            var c = document.getElementById('starters-list');
+            if (!appData.starters.length) { c.innerHTML = '<div class="empty-state"><h3>No Starters</h3></div>'; return; }
+            c.innerHTML = appData.starters.map(function(s) {
+                var intervalHours = getIntervalHours(s);
+                var hoursSinceFed = s.lastFed ? Math.floor((Date.now() - new Date(s.lastFed+'T00:00:00').getTime()) / 3600000) : null;
+                var status = s.location === 'dried' ? 'good' : hoursSinceFed === null ? 'warning' : hoursSinceFed < intervalHours ? 'good' : hoursSinceFed < intervalHours * 1.5 ? 'warning' : 'danger';
+                var fedStr = s.lastFed ? new Date(s.lastFed+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : 'Never';
+                var locName = s.location.charAt(0).toUpperCase() + s.location.slice(1);
+                var nextFeed = getNextFeedingDate(s);
+                var nextFeedStr = nextFeed ? nextFeed.toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+                var notifyIcon = s.notificationsEnabled && s.location !== 'dried' ? ' 🔔' : '';
+                var iconContent = s.photo ? '<img src="'+s.photo+'">' : s.name.charAt(0).toUpperCase();
+                return '<div class="card starter-card" onclick="editStarter('+s.id+')"><div class="starter-status '+status+'"></div><div class="starter-icon">'+iconContent+'</div><div class="starter-info"><div class="starter-name">'+s.name+notifyIcon+'</div><div class="starter-meta"><span>'+locName+'</span><span>Fed: '+fedStr+'</span>'+(nextFeedStr && s.location!=='dried'?'<span>Next: '+nextFeedStr+'</span>':'')+'</div></div>'+(s.location!=='dried'?'<button class="fed-btn" onclick="event.stopPropagation();feedStarter('+s.id+')">Fed</button>':'')+'</div>';
+            }).join('');
+        }
+
+        function renderRecipes() {
+            var c = document.getElementById('recipes-list');
+            if (!appData.recipes.length) { c.innerHTML = '<div class="empty-state"><h3>No Recipes</h3></div>'; return; }
+            c.innerHTML = appData.recipes.map(function(r) {
+                var sessionCount = getSessionsForRecipe(r.id).length;
+                var mainPhoto = null;
+                if (r.photos && r.photos.length > 0) {
+                    mainPhoto = (typeof r.mainPhotoIndex === 'number' && r.mainPhotoIndex >= 0 && r.mainPhotoIndex < r.photos.length) ? r.photos[r.mainPhotoIndex] : r.photos[0];
+                }
+                var thumbHtml = mainPhoto ? '<img src="'+mainPhoto+'">' : r.name.charAt(0).toUpperCase();
+                return '<div class="card recipe-card" onclick="viewRecipe('+r.id+')"><div class="recipe-thumb">'+thumbHtml+'</div><div class="recipe-info"><div class="recipe-name">'+r.name+'</div><div style="font-size:13px;color:var(--text-secondary)">'+(r.type||'Bread')+'</div><div style="margin-top:6px"><span class="tag">'+r.days+' day'+(r.days>1?'s':'')+'</span></div></div></div>';
+            }).join('');
+        }
+
+        function getSessionsForRecipe(recipeId) { return appData.sessions.filter(function(s) { return s.recipeId === recipeId; }); }
+
+        function renderSessions() {
+            var c = document.getElementById('sessions-list');
+            if (!appData.sessions.length) { c.innerHTML = '<div class="empty-state"><h3>No Sessions</h3></div>'; stopSessionTimer(); return; }
+            var active = appData.sessions.filter(function(s) { return s.isActive; });
+            var completed = appData.sessions.filter(function(s) { return !s.isActive; });
+            var html = '';
+            if (active.length) {
+                html += '<h4 style="color:var(--text-secondary);font-size:13px;margin-bottom:12px">ACTIVE</h4>';
+                active.forEach(function(s) {
+                    var phaseTime = getPhaseTime(s);
+                    var title = s.title || (s.recipeName + ' - ' + formatShortDate(s.startDate));
+                    html += '<div class="card session-card" onclick="openSessionDetail('+s.id+')"><div class="session-phase">'+getPhaseIcon(s.currentPhase)+'</div><div class="session-info"><div class="session-name">'+title+'</div><div class="session-meta">'+(s.starterName?'<span>'+s.starterName+'</span>':'')+'<span>Day '+s.currentDay+'</span><span>'+s.currentPhase+'</span><span class="phase-time" data-session-id="'+s.id+'">'+phaseTime+'</span></div></div></div>';
+                });
+                startSessionTimer();
+            } else {
+                stopSessionTimer();
+            }
+            if (completed.length) {
+                html += '<h4 style="color:var(--text-secondary);font-size:13px;margin:20px 0 12px">COMPLETED</h4>';
+                completed.slice(0,10).forEach(function(s) {
+                    var title = s.title || (s.recipeName + ' - ' + formatShortDate(s.startDate));
+                    html += '<div class="card session-card" onclick="openSessionDetail('+s.id+')"><div class="session-phase" style="background:rgba(93,140,74,0.12)">Done</div><div class="session-info"><div class="session-name">'+title+'</div></div></div>';
+                });
+            }
+            c.innerHTML = html;
+        }
+        
+        function startSessionTimer() {
+            if (sessionTimerInterval) return;
+            sessionTimerInterval = setInterval(function() {
+                var activeTab = document.getElementById('sessions-tab');
+                if (!activeTab || !activeTab.classList.contains('active')) return;
+                appData.sessions.filter(function(s) { return s.isActive; }).forEach(function(s) {
+                    var el = document.querySelector('.phase-time[data-session-id="'+s.id+'"]');
+                    if (el) el.textContent = getPhaseTime(s);
+                });
+            }, 10000);
+        }
+        
+        function stopSessionTimer() {
+            if (sessionTimerInterval) {
+                clearInterval(sessionTimerInterval);
+                sessionTimerInterval = null;
+            }
+        }
+
+        function getPhaseTime(s) { if (!s.phaseStartTime) return '0m'; var mins = Math.floor((Date.now() - new Date(s.phaseStartTime).getTime()) / 60000); return formatDuration(mins); }
+        function getPhaseIcon(p) { 
+            var icons = {mixing:'Mix','bulk-fermentation':'Bulk',shaping:'Shape',proofing:'Proof',baking:'Bake',completed:'Done'};
+            if (icons[p]) return icons[p];
+            // For custom phases, return first 4 characters capitalized
+            return p.substring(0, 4).charAt(0).toUpperCase() + p.substring(1, 4);
+        }
+
+        function openModal(t) {
+            if (t === 'add-starter') {
+                document.getElementById('starter-modal-title').textContent = 'Add Starter';
+                document.getElementById('edit-starter-id').value = '';
+                document.getElementById('starter-name').value = '';
+                document.getElementById('starter-last-fed').value = '';
+                document.getElementById('starter-notes').value = '';
+                document.getElementById('delete-starter-btn').style.display = 'none';
+                document.getElementById('starter-notifications').checked = true;
+                document.getElementById('starter-interval').value = 'default';
+                document.getElementById('starter-custom-hours').value = '24';
+                document.getElementById('starter-notify-time').value = '09:00';
+                document.getElementById('notification-options').style.display = 'block';
+                document.getElementById('custom-interval-row').style.display = 'none';
+                selectedLocation = 'refrigerator';
+                tempStarterPhoto = null;
+                document.getElementById('starter-photo-preview').innerHTML = '<span id="starter-photo-letter">S</span><input type="file" accept="image/*" style="display:none" onchange="uploadStarterPhoto(this)"><div class="upload-overlay">Tap to upload</div>';
+                document.querySelectorAll('#add-starter-modal .toggle-option').forEach(function(b){b.classList.remove('active');});
+                document.querySelector('#add-starter-modal .toggle-option[data-value="refrigerator"]').classList.add('active');
+                document.getElementById('fed-date-group').style.display = 'block';
+                document.getElementById('notification-settings').style.display = 'block';
+                updateIntervalDisplay();
+            }
+            if (t === 'add-recipe') {
+                document.getElementById('recipe-modal-title').textContent = 'Add Recipe';
+                editingRecipeId = null;
+                document.getElementById('recipe-name').value = '';
+                document.getElementById('recipe-type').value = '';
+                document.getElementById('recipe-days').value = '2';
+                document.getElementById('recipe-notes').value = '';
+                document.getElementById('delete-recipe-btn').style.display = 'none';
+                document.getElementById('copy-from-group').style.display = 'block';
+                var copySelect = document.getElementById('copy-from-recipe');
+                copySelect.innerHTML = '<option value="">-- Start Fresh --</option>' + appData.recipes.map(function(r) { return '<option value="'+r.id+'">'+r.name+'</option>'; }).join('');
+                tempIngredients = []; tempDirections = []; tempPhotos = []; tempMainPhotoIndex = -1; tempPhases = DEFAULT_PHASES.slice();
+                renderTempIngredients(); renderTempDirections(); renderTempPhotos(); renderTempPhases();
+            }
+            if (t === 'start-session') {
+                document.getElementById('session-recipe').innerHTML = appData.recipes.map(function(r){return '<option value="'+r.id+'">'+r.name+'</option>';}).join('');
+                document.getElementById('session-starter').innerHTML = '<option value="">None</option>' + appData.starters.filter(function(s){return s.location!=='dried';}).map(function(s){return '<option value="'+s.id+'">'+s.name+'</option>';}).join('');
+            }
+            document.getElementById(t + '-modal').classList.add('active');
+        }
+        
+        function closeModal(t) { document.getElementById(t + '-modal').classList.remove('active'); }
+        
+        function selectLocation(btn) {
+            document.querySelectorAll('#add-starter-modal .toggle-option').forEach(function(b){b.classList.remove('active');});
+            btn.classList.add('active');
+            selectedLocation = btn.dataset.value;
+            document.getElementById('fed-date-group').style.display = selectedLocation === 'dried' ? 'none' : 'block';
+            document.getElementById('notification-settings').style.display = selectedLocation === 'dried' ? 'none' : 'block';
+            updateIntervalDisplay();
+        }
+
+        function copyFromRecipe() {
+            var copyId = document.getElementById('copy-from-recipe').value;
+            if (!copyId) return;
+            var source = appData.recipes.find(function(r) { return r.id === parseInt(copyId); });
+            if (!source) return;
+            document.getElementById('recipe-name').value = source.name + ' (Copy)';
+            document.getElementById('recipe-type').value = source.type || '';
+            document.getElementById('recipe-days').value = source.days;
+            document.getElementById('recipe-notes').value = source.notes || '';
+            tempIngredients = source.ingredients ? source.ingredients.map(function(i) { return {id: Date.now() + Math.random(), amount: i.amount, unit: i.unit, name: i.name}; }) : [];
+            tempDirections = source.directions ? source.directions.map(function(d) { return {id: Date.now() + Math.random(), day: d.day, step: d.step}; }) : [];
+            tempPhotos = source.photos ? source.photos.slice() : [];
+            tempMainPhotoIndex = source.mainPhotoIndex !== undefined ? source.mainPhotoIndex : -1;
+            tempPhases = source.phases ? source.phases.slice() : DEFAULT_PHASES.slice();
+            renderTempIngredients(); renderTempDirections(); renderTempPhotos(); renderTempPhases();
+        }
+
+        function saveStarter() {
+            var name = document.getElementById('starter-name').value.trim(); if (!name) return alert('Enter name');
+            var editId = document.getElementById('edit-starter-id').value;
+            var useCustom = document.getElementById('starter-interval').value === 'custom';
+            var data = { id: editId ? parseInt(editId) : Date.now(), name: name, location: selectedLocation, lastFed: document.getElementById('starter-last-fed').value || null, notes: document.getElementById('starter-notes').value, notificationsEnabled: document.getElementById('starter-notifications').checked, useCustomInterval: useCustom, customIntervalHours: useCustom ? parseInt(document.getElementById('starter-custom-hours').value) : 24, notifyTime: document.getElementById('starter-notify-time').value, photo: tempStarterPhoto };
+            if (editId) { var i = appData.starters.findIndex(function(s){return s.id===parseInt(editId);}); if (i !== -1) { data.photo = tempStarterPhoto || appData.starters[i].photo; appData.starters[i] = data; } }
+            else { if (appData.starters.length >= 10) return alert('Max 10'); appData.starters.push(data); }
+            saveData(); scheduleNotification(data); renderStarters(); closeModal('add-starter');
+        }
+        
+        function editStarter(id) {
+            var s = appData.starters.find(function(x){return x.id===id;}); if (!s) return;
+            document.getElementById('starter-modal-title').textContent = 'Edit Starter';
+            document.getElementById('edit-starter-id').value = s.id;
+            document.getElementById('starter-name').value = s.name;
+            document.getElementById('starter-last-fed').value = s.lastFed || '';
+            document.getElementById('starter-notes').value = s.notes || '';
+            document.getElementById('delete-starter-btn').style.display = 'block';
+            document.getElementById('starter-notifications').checked = s.notificationsEnabled !== false;
+            document.getElementById('starter-interval').value = s.useCustomInterval ? 'custom' : 'default';
+            document.getElementById('starter-custom-hours').value = s.customIntervalHours || 24;
+            document.getElementById('starter-notify-time').value = s.notifyTime || '09:00';
+            document.getElementById('notification-options').style.display = s.notificationsEnabled !== false ? 'block' : 'none';
+            document.getElementById('custom-interval-row').style.display = s.useCustomInterval ? 'flex' : 'none';
+            selectedLocation = s.location;
+            tempStarterPhoto = s.photo || null;
+            if (s.photo) { document.getElementById('starter-photo-preview').innerHTML = '<img src="'+s.photo+'"><input type="file" accept="image/*" style="display:none" onchange="uploadStarterPhoto(this)"><div class="upload-overlay">Tap to change</div>'; }
+            else { document.getElementById('starter-photo-preview').innerHTML = '<span id="starter-photo-letter">'+s.name.charAt(0).toUpperCase()+'</span><input type="file" accept="image/*" style="display:none" onchange="uploadStarterPhoto(this)"><div class="upload-overlay">Tap to upload</div>'; }
+            document.querySelectorAll('#add-starter-modal .toggle-option').forEach(function(b){b.classList.remove('active');});
+            var locBtn = document.querySelector('#add-starter-modal .toggle-option[data-value="'+s.location+'"]');
+            if (locBtn) locBtn.classList.add('active');
+            document.getElementById('fed-date-group').style.display = s.location === 'dried' ? 'none' : 'block';
+            document.getElementById('notification-settings').style.display = s.location === 'dried' ? 'none' : 'block';
+            updateIntervalDisplay();
+            document.getElementById('add-starter-modal').classList.add('active');
+        }
+        
+        function deleteStarter() { if (!confirm('Delete?')) return; var id = parseInt(document.getElementById('edit-starter-id').value); if (scheduledNotifications[id]) clearTimeout(scheduledNotifications[id]); appData.starters = appData.starters.filter(function(s){return s.id!==id;}); saveData(); renderStarters(); closeModal('add-starter'); }
+        function feedStarter(id) { var s = appData.starters.find(function(x){return x.id===id;}); if (s) { s.lastFed = new Date().toISOString().split('T')[0]; saveData(); scheduleNotification(s); renderStarters(); } }
+
+        function renderTempPhotos() {
+            var c = document.getElementById('recipe-photos');
+            var html = tempPhotos.map(function(p, idx) {
+                var isMain = idx === tempMainPhotoIndex;
+                return '<div class="photo-item'+(isMain?' main-photo':'')+'"><img src="'+p+'"><button class="delete-photo" onclick="event.stopPropagation();deleteTempPhoto('+idx+')">x</button><button class="set-main-photo" onclick="event.stopPropagation();setTempMainPhoto('+idx+')">'+(isMain?'★ Main':'Set Main')+'</button></div>';
+            }).join('');
+            html += '<label class="add-photo-btn"><input type="file" accept="image/*" style="display:none" onchange="addTempPhoto(this)">+</label>';
+            c.innerHTML = html;
+        }
+        function setTempMainPhoto(idx) { tempMainPhotoIndex = idx; renderTempPhotos(); }
+        function deleteTempPhoto(idx) { tempPhotos.splice(idx, 1); if (tempMainPhotoIndex === idx) tempMainPhotoIndex = tempPhotos.length > 0 ? 0 : -1; else if (tempMainPhotoIndex > idx) tempMainPhotoIndex--; renderTempPhotos(); }
+        function addTempPhoto(input) { if (input.files && input.files[0]) { var reader = new FileReader(); reader.onload = function(e) { tempPhotos.push(e.target.result); if (tempMainPhotoIndex < 0) tempMainPhotoIndex = 0; renderTempPhotos(); }; reader.readAsDataURL(input.files[0]); } }
+        function addSessionPhoto(sessionId, input) { if (input.files && input.files[0]) { var reader = new FileReader(); reader.onload = function(e) { var s = appData.sessions.find(function(x){return x.id===sessionId;}); if (s) { if (!s.photos) s.photos = []; s.photos.push(e.target.result); var r = appData.recipes.find(function(x){return x.id===s.recipeId;}); if (r) { if (!r.photos) r.photos = []; r.photos.push(e.target.result); if (r.mainPhotoIndex === undefined || r.mainPhotoIndex < 0) r.mainPhotoIndex = r.photos.length - 1; } saveData(); openSessionDetail(sessionId); } }; reader.readAsDataURL(input.files[0]); } }
+        function setSessionPhotoAsMain(sessionId, photoIndex) { var s = appData.sessions.find(function(x){return x.id===sessionId;}); if (s && s.photos && s.photos[photoIndex]) { var r = appData.recipes.find(function(x){return x.id===s.recipeId;}); if (r) { var photoData = s.photos[photoIndex]; var recipePhotoIdx = r.photos ? r.photos.indexOf(photoData) : -1; if (recipePhotoIdx >= 0) { r.mainPhotoIndex = recipePhotoIdx; } else { if (!r.photos) r.photos = []; r.photos.push(photoData); r.mainPhotoIndex = r.photos.length - 1; } saveData(); renderRecipes(); openSessionDetail(sessionId); } } }
+        function deleteSessionPhoto(sessionId, idx) { var s = appData.sessions.find(function(x){return x.id===sessionId;}); if (s && s.photos) { s.photos.splice(idx, 1); saveData(); openSessionDetail(sessionId); } }
+
+        function renderTempIngredients() { 
+            var c = document.getElementById('ingredients-list'); 
+            c.innerHTML = tempIngredients.length ? tempIngredients.map(function(i,idx){ 
+                return '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)"><span style="flex:1"><b>'+i.amount+' '+i.unit+'</b> '+i.name+'</span><button type="button" onclick="deleteTempIngredient('+idx+')" style="background:rgba(196,93,74,0.1);color:var(--danger);border:none;border-radius:6px;width:28px;height:28px;cursor:pointer">x</button></div>'; 
+            }).join('') : '<p style="color:var(--text-secondary);text-align:center">No ingredients</p>'; 
+        }
+        function deleteTempIngredient(idx) { tempIngredients.splice(idx, 1); renderTempIngredients(); }
+        function addIngredient() { 
+            var a = prompt('Amount (e.g., 500):'); 
+            if (a === null || a === '') return; 
+            var u = prompt('Unit (e.g., g):'); 
+            if (u === null) return; 
+            u = u || 'g'; 
+            var n = prompt('Ingredient name:'); 
+            if (n === null || n === '') return; 
+            tempIngredients.push({id: Date.now(), amount: a, unit: u, name: n}); 
+            renderTempIngredients(); 
+        }
+        
+        function renderTempDirections() { 
+            var c = document.getElementById('directions-list'); 
+            c.innerHTML = tempDirections.length ? tempDirections.map(function(d,idx){ 
+                var upBtn = idx > 0 ? '<button type="button" onclick="moveTempDirection('+idx+',-1)" style="background:var(--bg-card);border:1px solid var(--border);border-radius:4px;width:24px;height:24px;cursor:pointer;font-size:12px">↑</button>' : '<span style="width:24px"></span>';
+                var downBtn = idx < tempDirections.length - 1 ? '<button type="button" onclick="moveTempDirection('+idx+',1)" style="background:var(--bg-card);border:1px solid var(--border);border-radius:4px;width:24px;height:24px;cursor:pointer;font-size:12px">↓</button>' : '<span style="width:24px"></span>';
+                return '<div style="display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid var(--border)"><div style="display:flex;flex-direction:column;gap:2px">'+upBtn+downBtn+'</div><span style="width:24px;height:24px;background:var(--primary);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0">'+(idx+1)+'</span><span style="flex:1"><b>Day '+d.day+':</b> '+d.step+'</span><button type="button" onclick="deleteTempDirection('+idx+')" style="background:rgba(196,93,74,0.1);color:var(--danger);border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;flex-shrink:0">x</button></div>'; 
+            }).join('') : '<p style="color:var(--text-secondary);text-align:center">No directions</p>'; 
+        }
+        function deleteTempDirection(idx) { tempDirections.splice(idx, 1); renderTempDirections(); }
+        function moveTempDirection(idx, dir) { 
+            var newIdx = idx + dir; 
+            if (newIdx < 0 || newIdx >= tempDirections.length) return; 
+            var temp = tempDirections[idx]; 
+            tempDirections[idx] = tempDirections[newIdx]; 
+            tempDirections[newIdx] = temp; 
+            renderTempDirections(); 
+        }
+        function addDirection() { 
+            var day = prompt('Which day? (1-5):'); 
+            if (day === null) return; 
+            day = day || '1'; 
+            var step = prompt('Direction:'); 
+            if (step === null || step === '') return; 
+            tempDirections.push({id: Date.now(), day: parseInt(day), step: step}); 
+            renderTempDirections(); 
+        }
+
+        function renderTempPhases() {
+            var c = document.getElementById('phases-list');
+            var displayPhases = tempPhases.filter(function(p) { return p !== 'completed'; });
+            c.innerHTML = displayPhases.length ? displayPhases.map(function(p, idx) {
+                var upBtn = idx > 0 ? '<button type="button" onclick="moveTempPhase('+idx+',-1)" style="background:var(--bg-card);border:1px solid var(--border);border-radius:4px;width:24px;height:24px;cursor:pointer;font-size:12px">↑</button>' : '<span style="width:24px"></span>';
+                var downBtn = idx < displayPhases.length - 1 ? '<button type="button" onclick="moveTempPhase('+idx+',1)" style="background:var(--bg-card);border:1px solid var(--border);border-radius:4px;width:24px;height:24px;cursor:pointer;font-size:12px">↓</button>' : '<span style="width:24px"></span>';
+                return '<div style="display:flex;align-items:center;gap:6px;padding:8px 0;border-bottom:1px solid var(--border)"><div style="display:flex;flex-direction:column;gap:2px">'+upBtn+downBtn+'</div><span style="flex:1;font-weight:500">'+p+'</span><button type="button" onclick="editTempPhase('+idx+')" style="background:var(--bg-card);border:1px solid var(--border);border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:12px">✎</button><button type="button" onclick="deleteTempPhase('+idx+')" style="background:rgba(196,93,74,0.1);color:var(--danger);border:none;border-radius:6px;width:28px;height:28px;cursor:pointer;flex-shrink:0">x</button></div>';
+            }).join('') : '<p style="color:var(--text-secondary);text-align:center">No phases (defaults will be used)</p>';
+        }
+        function addPhase() {
+            var name = prompt('Phase name:');
+            if (name === null || name.trim() === '') return;
+            name = name.trim().toLowerCase();
+            if (name === 'completed') return alert('"completed" is reserved');
+            if (tempPhases.indexOf(name) !== -1) return alert('Phase already exists');
+            var idx = tempPhases.indexOf('completed');
+            if (idx !== -1) tempPhases.splice(idx, 0, name);
+            else tempPhases.push(name);
+            renderTempPhases();
+        }
+        function editTempPhase(idx) {
+            var displayPhases = tempPhases.filter(function(p) { return p !== 'completed'; });
+            var oldName = displayPhases[idx];
+            var newName = prompt('Edit phase name:', oldName);
+            if (newName === null || newName.trim() === '') return;
+            newName = newName.trim().toLowerCase();
+            if (newName === 'completed') return alert('"completed" is reserved');
+            if (newName !== oldName && tempPhases.indexOf(newName) !== -1) return alert('Phase already exists');
+            var realIdx = tempPhases.indexOf(oldName);
+            if (realIdx !== -1) tempPhases[realIdx] = newName;
+            renderTempPhases();
+        }
+        function deleteTempPhase(idx) {
+            var displayPhases = tempPhases.filter(function(p) { return p !== 'completed'; });
+            var name = displayPhases[idx];
+            var realIdx = tempPhases.indexOf(name);
+            if (realIdx !== -1) tempPhases.splice(realIdx, 1);
+            renderTempPhases();
+        }
+        function moveTempPhase(idx, dir) {
+            var displayPhases = tempPhases.filter(function(p) { return p !== 'completed'; });
+            var newIdx = idx + dir;
+            if (newIdx < 0 || newIdx >= displayPhases.length) return;
+            var name = displayPhases[idx];
+            var targetName = displayPhases[newIdx];
+            var realIdx = tempPhases.indexOf(name);
+            var realTargetIdx = tempPhases.indexOf(targetName);
+            tempPhases[realIdx] = targetName;
+            tempPhases[realTargetIdx] = name;
+            renderTempPhases();
+        }
+
+        function saveRecipe() {
+            var name = document.getElementById('recipe-name').value.trim(); 
+            if (!name) return alert('Enter name');
+            
+            // Ensure completed is always at the end
+            var phasesToSave = tempPhases.filter(function(p) { return p !== 'completed'; });
+            phasesToSave.push('completed');
+            
+            if (editingRecipeId) {
+                // Editing existing recipe
+                var idx = appData.recipes.findIndex(function(r) { return r.id === editingRecipeId; });
+                if (idx !== -1) {
+                    appData.recipes[idx] = {
+                        id: editingRecipeId,
+                        name: name,
+                        type: document.getElementById('recipe-type').value || 'Bread',
+                        days: parseInt(document.getElementById('recipe-days').value),
+                        notes: document.getElementById('recipe-notes').value,
+                        ingredients: tempIngredients.slice(),
+                        directions: tempDirections.slice(),
+                        photos: tempPhotos.slice(),
+                        mainPhotoIndex: tempMainPhotoIndex,
+                        phases: phasesToSave
+                    };
+                }
+            } else {
+                // Creating new recipe
+                appData.recipes.push({
+                    id: Date.now(),
+                    name: name,
+                    type: document.getElementById('recipe-type').value || 'Bread',
+                    days: parseInt(document.getElementById('recipe-days').value),
+                    notes: document.getElementById('recipe-notes').value,
+                    ingredients: tempIngredients.slice(),
+                    directions: tempDirections.slice(),
+                    photos: tempPhotos.slice(),
+                    mainPhotoIndex: tempMainPhotoIndex,
+                    phases: phasesToSave
+                });
+            }
+            
+            saveData(); 
+            renderRecipes(); 
+            closeModal('add-recipe');
+        }
+
+        function viewRecipe(id) {
+            var r = appData.recipes.find(function(x){return x.id===id;}); if (!r) return;
+            document.getElementById('view-recipe-title').textContent = r.name;
+            var ingHtml = r.ingredients && r.ingredients.length ? r.ingredients.map(function(i){return '<div style="padding:6px 0">• <b>'+i.amount+' '+i.unit+'</b> '+i.name+'</div>';}).join('') : '<p style="color:var(--text-secondary)">No ingredients</p>';
+            var dirHtml = r.directions && r.directions.length ? r.directions.map(function(d,i){return '<div style="display:flex;gap:10px;padding:8px 0"><span style="width:24px;height:24px;background:var(--primary);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px">'+(i+1)+'</span><span><b>Day '+d.day+':</b> '+d.step+'</span></div>';}).join('') : '<p style="color:var(--text-secondary)">No directions</p>';
+            var photoHtml = '';
+            if (r.photos && r.photos.length) { photoHtml = '<div class="detail-section"><h4>Photos</h4><div class="photo-grid">' + r.photos.map(function(p, idx){ var isMain = idx === r.mainPhotoIndex; return '<div class="photo-item'+(isMain?' main-photo':'')+'"><img src="'+p+'">'+(isMain?'<button class="set-main-photo">★ Main</button>':'')+'</div>'; }).join('') + '</div></div>'; }
+            var sessions = getSessionsForRecipe(r.id);
+            var sessionsHtml = '';
+            if (sessions.length) { sessionsHtml = '<div class="detail-section"><h4>Sessions ('+sessions.length+')</h4>' + sessions.map(function(s){ var title = s.title || formatShortDate(s.startDate); var status = s.isActive ? s.currentPhase : 'Completed'; return '<div class="session-link" onclick="closeModal(\'view-recipe\');openSessionDetail('+s.id+')"><span>'+getPhaseIcon(s.currentPhase)+'</span><span style="flex:1">'+title+'</span><span style="color:var(--text-secondary)">'+status+'</span></div>'; }).join('') + '</div>'; }
+            document.getElementById('view-recipe-body').innerHTML = '<div class="detail-section"><h4>Ingredients</h4>'+ingHtml+'</div><div class="detail-section"><h4>Directions</h4>'+dirHtml+'</div>'+photoHtml+sessionsHtml+(r.notes?'<div class="detail-section"><h4>Notes</h4><p>'+r.notes+'</p></div>':'')+'<div class="detail-section"><h4>Export Recipe</h4><div style="display:flex;gap:8px"><button class="btn-secondary" style="flex:1;margin:0" onclick="exportRecipePaprika('+r.id+')">Paprika Format</button><button class="btn-secondary" style="flex:1;margin:0" onclick="exportRecipeText('+r.id+')">Text File</button></div></div><button class="btn-primary" onclick="closeModal(\'view-recipe\');editRecipe('+r.id+')">Edit</button><button class="btn-primary" style="background:var(--success)" onclick="closeModal(\'view-recipe\');openModal(\'start-session\');document.getElementById(\'session-recipe\').value='+r.id+'">Start Session</button><button class="btn-danger" onclick="deleteRecipeConfirm('+r.id+')">Delete</button>';
+            openModal('view-recipe');
+        }
+        
+        function deleteRecipeConfirm(id) { if(confirm('Delete?')){appData.recipes=appData.recipes.filter(function(x){return x.id!==id;});saveData();renderRecipes();closeModal('view-recipe');} }
+        
+        function editRecipe(id) {
+            var r = appData.recipes.find(function(x){return x.id===id;}); if (!r) return;
+            document.getElementById('recipe-modal-title').textContent = 'Edit Recipe';
+            editingRecipeId = r.id;
+            document.getElementById('recipe-name').value = r.name;
+            document.getElementById('recipe-type').value = r.type || '';
+            document.getElementById('recipe-days').value = r.days;
+            document.getElementById('recipe-notes').value = r.notes || '';
+            document.getElementById('delete-recipe-btn').style.display = 'block';
+            document.getElementById('copy-from-group').style.display = 'none';
+            tempIngredients = r.ingredients ? r.ingredients.map(function(i) { return {id: i.id, amount: i.amount, unit: i.unit, name: i.name}; }) : [];
+            tempDirections = r.directions ? r.directions.map(function(d) { return {id: d.id, day: d.day, step: d.step}; }) : [];
+            tempPhotos = r.photos ? r.photos.slice() : [];
+            tempMainPhotoIndex = typeof r.mainPhotoIndex === 'number' ? r.mainPhotoIndex : -1;
+            tempPhases = r.phases ? r.phases.slice() : DEFAULT_PHASES.slice();
+            renderTempIngredients(); renderTempDirections(); renderTempPhotos(); renderTempPhases();
+            document.getElementById('add-recipe-modal').classList.add('active');
+        }
+        
+        function deleteRecipe() { if (!confirm('Delete?')) return; appData.recipes = appData.recipes.filter(function(r){return r.id!==editingRecipeId;}); saveData(); renderRecipes(); closeModal('add-recipe'); }
+
+        function startSession() {
+            var recipeId = parseInt(document.getElementById('session-recipe').value);
+            var starterId = document.getElementById('session-starter').value ? parseInt(document.getElementById('session-starter').value) : null;
+            var recipe = appData.recipes.find(function(r){return r.id===recipeId;});
+            var starter = starterId ? appData.starters.find(function(s){return s.id===starterId;}) : null;
+            if (!recipe) return alert('Select recipe');
+            var now = new Date();
+            var title = recipe.name + ' - ' + formatShortDate(now);
+            appData.sessions.push({ id: Date.now(), recipeId: recipeId, recipeName: recipe.name, recipeDays: recipe.days, starterId: starterId, starterName: starter ? starter.name : null, startDate: now.toISOString(), title: title, currentDay: 1, currentPhase: 'mixing', phaseStartTime: now.toISOString(), phaseChangedAt: now.toISOString(), isActive: true, checkedIngredients: [], checkedSteps: [], photos: [], notes: SESSION_NOTES_TEMPLATE, phaseLog: [{phase: 'mixing', startTime: now.toISOString(), endTime: null}] });
+            saveData(); renderSessions(); closeModal('start-session'); switchTab('sessions');
+        }
+
+        function deletePhaseLogEntry(sessionId, logIndex) {
+            var s = appData.sessions.find(function(x){return x.id===sessionId;});
+            if (!s || !s.phaseLog || s.phaseLog.length <= 1) return;
+            if (!confirm('Delete this phase entry?')) return;
+            s.phaseLog.splice(logIndex, 1);
+            var lastEntry = s.phaseLog[s.phaseLog.length - 1];
+            s.currentPhase = lastEntry.phase;
+            s.phaseStartTime = lastEntry.startTime;
+            s.phaseChangedAt = lastEntry.startTime;
+            saveData(); openSessionDetail(sessionId); renderSessions();
+        }
+
+        function updatePhaseLogTime(sessionId, logIndex, field, value) {
+            var s = appData.sessions.find(function(x){return x.id===sessionId;});
+            if (!s || !s.phaseLog || !s.phaseLog[logIndex]) return;
+            var newTime = new Date(value).toISOString();
+            s.phaseLog[logIndex][field] = newTime;
+            if (field === 'startTime' && logIndex === s.phaseLog.length - 1) { s.phaseStartTime = newTime; s.phaseChangedAt = newTime; }
+            saveData();
+        }
+
+        function openSessionDetail(id) {
+            var s = appData.sessions.find(function(x){return x.id===id;}); if (!s) return;
+            var recipe = appData.recipes.find(function(r){return r.id===s.recipeId;});
+            var recipeDays = parseInt(s.recipeDays) || (recipe ? parseInt(recipe.days) : 5);
+            if (isNaN(recipeDays) || recipeDays < 1) recipeDays = 5;
+            document.getElementById('session-detail-title').textContent = 'Session';
+            var phases = (recipe && recipe.phases) ? recipe.phases : DEFAULT_PHASES;
+            var phaseTime = getPhaseTime(s);
+            var phaseChangedStr = s.phaseChangedAt ? formatDateTime(s.phaseChangedAt) : '';
+            var titleHtml = '<input type="text" class="editable-title" value="'+(s.title || s.recipeName)+'" onchange="updateSessionTitle('+s.id+', this.value)" placeholder="Session title">';
+            var timerHtml = s.isActive ? '<div class="timer-badge"><span>In '+s.currentPhase+' for: <b>'+phaseTime+'</b></span><span style="font-size:11px;color:var(--text-secondary)">Started: '+phaseChangedStr+'</span></div>' : '';
+            
+            // Phase log with editable start/end times - expanded inputs
+            var phaseLogHtml = '';
+            if (s.phaseLog && s.phaseLog.length > 0) {
+                phaseLogHtml = '<div class="detail-section"><h4>Phase History</h4><div class="phase-log">';
+                s.phaseLog.forEach(function(log, idx) {
+                    var duration = '';
+                    if (log.endTime) { var mins = Math.floor((new Date(log.endTime) - new Date(log.startTime)) / 60000); duration = ' (' + formatDuration(mins) + ')'; }
+                    else if (s.isActive && idx === s.phaseLog.length - 1) { var mins = Math.floor((Date.now() - new Date(log.startTime).getTime()) / 60000); duration = ' (' + formatDuration(mins) + ')'; }
+                    var canDelete = s.phaseLog.length > 1;
+                    var startVal = toLocalDatetimeString(log.startTime);
+                    var endVal = log.endTime ? toLocalDatetimeString(log.endTime) : '';
+                    var isLast = idx === s.phaseLog.length - 1;
+                    phaseLogHtml += '<div class="phase-log-item"><div class="phase-log-info"><b>'+getPhaseIcon(log.phase)+'</b>'+duration+'<div class="phase-log-times"><div style="margin-bottom:6px"><label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:2px">Start:</label><input type="datetime-local" value="'+startVal+'" onchange="updatePhaseLogTime('+s.id+','+idx+',\'startTime\',this.value)"></div>';
+                    if (!isLast || !s.isActive) { phaseLogHtml += '<div><label style="font-size:11px;color:var(--text-secondary);display:block;margin-bottom:2px">End:</label><input type="datetime-local" value="'+endVal+'" onchange="updatePhaseLogTime('+s.id+','+idx+',\'endTime\',this.value)"></div>'; }
+                    phaseLogHtml += '</div></div>'+(canDelete?'<button class="phase-log-delete" onclick="event.stopPropagation();deletePhaseLogEntry('+s.id+','+idx+')">×</button>':'')+'</div>';
+                });
+                phaseLogHtml += '</div></div>';
+            }
+            
+            var ingHtml = '<p style="color:var(--text-secondary)">No ingredients</p>';
+            if (recipe && recipe.ingredients && recipe.ingredients.length) { ingHtml = recipe.ingredients.map(function(i){ var chk = s.checkedIngredients && s.checkedIngredients.indexOf(i.id) !== -1; return '<div class="check-item '+(chk?'checked':'')+'" onclick="toggleIngredient('+s.id+','+i.id+')"><span class="check-icon">'+(chk?'[x]':'[ ]')+'</span><span class="check-text"><b>'+i.amount+' '+i.unit+'</b> '+i.name+'</span></div>'; }).join(''); }
+            var dirHtml = '<p style="color:var(--text-secondary)">No directions</p>';
+            if (recipe && recipe.directions && recipe.directions.length) { dirHtml = recipe.directions.map(function(d,i){ var chk = s.checkedSteps && s.checkedSteps.indexOf(d.id) !== -1; return '<div class="check-item '+(chk?'checked':'')+'" onclick="toggleStep('+s.id+','+d.id+')"><span class="check-icon">'+(chk?'[x]':'[ ]')+'</span><span class="check-text"><b>Day '+d.day+', Step '+(i+1)+':</b> '+d.step+'</span></div>'; }).join(''); }
+            var photoHtml = '<div class="detail-section"><h4>Photos</h4><div class="photo-grid">';
+            if (s.photos && s.photos.length) { photoHtml += s.photos.map(function(p, idx){return '<div class="photo-item"><img src="'+p+'"><button class="delete-photo" onclick="event.stopPropagation();deleteSessionPhoto('+s.id+','+idx+')">x</button><button class="set-main-photo" onclick="event.stopPropagation();setSessionPhotoAsMain('+s.id+','+idx+')">Set Main</button></div>';}).join(''); }
+            photoHtml += '<label class="add-photo-btn"><input type="file" accept="image/*" style="display:none" onchange="addSessionPhoto('+s.id+', this)">+</label></div></div>';
+            var phaseButtons = phases.map(function(p){return '<button onclick="updatePhase('+s.id+',\''+p+'\')" style="padding:8px 12px;border-radius:20px;border:none;cursor:pointer;font-size:12px;background:'+(s.currentPhase===p?'var(--primary)':'var(--bg)')+';color:'+(s.currentPhase===p?'white':'var(--text-secondary)')+'">'+getPhaseIcon(p)+'</button>';}).join('');
+            var dayButtons = [];
+            for (var d = 1; d <= recipeDays; d++) { dayButtons.push('<button onclick="updateDay('+s.id+','+d+')" style="width:36px;height:36px;border-radius:50%;border:none;cursor:pointer;background:'+(d===s.currentDay?'var(--primary)':'var(--bg)')+';color:'+(d===s.currentDay?'white':'var(--text)')+'">'+d+'</button>'); }
+            var recipeLink = recipe ? '<div class="detail-section"><h4>Recipe</h4><div class="session-link" onclick="closeModal(\'session-detail\');viewRecipe('+recipe.id+')"><span style="flex:1">'+recipe.name+'</span><span style="color:var(--text-secondary)">&gt;</span></div></div>' : '';
+            var notesHtml = '<div class="detail-section"><h4>Session Notes</h4><div id="session-notes-editor" contenteditable="true" style="min-height:200px;font-size:14px;padding:14px 16px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);line-height:1.6;outline:none" onblur="updateSessionNotes('+s.id+', this.innerHTML)">'+(s.notes || SESSION_NOTES_TEMPLATE)+'</div></div>';
+            document.getElementById('session-detail-body').innerHTML = titleHtml+timerHtml+'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px">'+phaseButtons+'</div>'+phaseLogHtml+'<div class="detail-section"><h4>Day '+s.currentDay+' of '+recipeDays+'</h4><div style="display:flex;gap:8px;margin-top:8px">'+dayButtons.join('')+'</div></div><div class="detail-section"><h4>Ingredients <span style="font-weight:normal;font-size:12px;color:var(--text-secondary)">(tap to check)</span></h4>'+ingHtml+'</div><div class="detail-section"><h4>Directions <span style="font-weight:normal;font-size:12px;color:var(--text-secondary)">(tap to check)</span></h4>'+dirHtml+'</div>'+photoHtml+notesHtml+recipeLink+'<div class="detail-section"><h4>Export Session</h4><div style="display:flex;gap:8px"><button class="btn-secondary" style="flex:1;margin:0" onclick="exportSessionText('+s.id+')">Text File</button><button class="btn-secondary" style="flex:1;margin:0" onclick="exportSessionJSON('+s.id+')">JSON</button></div></div>'+(s.isActive?'<button class="btn-primary" style="background:var(--success)" onclick="completeSession('+s.id+')">Complete Session</button>':'')+'<button class="btn-danger" onclick="deleteSessionConfirm('+s.id+')">Delete Session</button>';
+            openModal('session-detail');
+        }
+
+        function updateSessionTitle(id, title) { var s = appData.sessions.find(function(x){return x.id===id;}); if (s) { s.title = title; saveData(); renderSessions(); } }
+        function updateSessionNotes(id, notes) { var s = appData.sessions.find(function(x){return x.id===id;}); if (s) { s.notes = notes; saveData(); } }
+        function deleteSessionConfirm(id) { if(confirm('Delete?')){appData.sessions=appData.sessions.filter(function(x){return x.id!==id;});saveData();renderSessions();closeModal('session-detail');} }
+        function toggleIngredient(sid, iid) { var s = appData.sessions.find(function(x){return x.id===sid;}); if (!s) return; if (!s.checkedIngredients) s.checkedIngredients = []; var idx = s.checkedIngredients.indexOf(iid); if (idx === -1) s.checkedIngredients.push(iid); else s.checkedIngredients.splice(idx,1); saveData(); openSessionDetail(sid); }
+        function toggleStep(sid, did) { var s = appData.sessions.find(function(x){return x.id===sid;}); if (!s) return; if (!s.checkedSteps) s.checkedSteps = []; var idx = s.checkedSteps.indexOf(did); if (idx === -1) s.checkedSteps.push(did); else s.checkedSteps.splice(idx,1); saveData(); openSessionDetail(sid); }
+        function updatePhase(id,p) { var s = appData.sessions.find(function(x){return x.id===id;}); if (s) { if (s.currentPhase !== p) { var now = new Date().toISOString(); if (s.phaseLog && s.phaseLog.length > 0) { s.phaseLog[s.phaseLog.length - 1].endTime = now; } s.currentPhase = p; s.phaseStartTime = now; s.phaseChangedAt = now; if (!s.phaseLog) s.phaseLog = []; s.phaseLog.push({phase: p, startTime: now, endTime: null}); if (p === 'completed') s.isActive = false; saveData(); } openSessionDetail(id); renderSessions(); } }
+        function updateDay(id,d) { var s = appData.sessions.find(function(x){return x.id===id;}); if (s) { s.currentDay = d; saveData(); openSessionDetail(id); } }
+        function completeSession(id) { var s = appData.sessions.find(function(x){return x.id===id;}); if (s) { var now = new Date().toISOString(); if (s.phaseLog && s.phaseLog.length > 0) { s.phaseLog[s.phaseLog.length - 1].endTime = now; } s.isActive = false; s.currentPhase = 'completed'; if (!s.phaseLog) s.phaseLog = []; s.phaseLog.push({phase: 'completed', startTime: now, endTime: null}); saveData(); closeModal('session-detail'); renderSessions(); } }
+
+        function renderCalendar() {
+            var grid = document.getElementById('calendar-grid'), y = currentMonth.getFullYear(), m = currentMonth.getMonth();
+            document.getElementById('calendar-month').textContent = currentMonth.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+            var firstDay = new Date(y,m,1), lastDay = new Date(y,m+1,0), pad = firstDay.getDay();
+            var html = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(function(d){return '<div class="calendar-day-header">'+d+'</div>';}).join('');
+            for (var i = 0; i < pad; i++) html += '<div class="calendar-day" style="opacity:0.3">'+(new Date(y,m,-pad+i+1).getDate())+'</div>';
+            for (var day = 1; day <= lastDay.getDate(); day++) { var date = new Date(y,m,day), isToday = isSameDay(date,new Date()), isSel = isSameDay(date,selectedDate); var events = getEventsForDate(date); html += '<div class="calendar-day '+(isToday?'today':'')+' '+(isSel?'selected':'')+'" onclick="selectCalendarDay('+y+','+m+','+day+')">'+day+'<div class="calendar-dots">'+(events.feeding?'<div class="calendar-dot feeding"></div>':'')+(events.session?'<div class="calendar-dot session"></div>':'')+'</div></div>'; }
+            grid.innerHTML = html;
+            renderCalendarEvents();
+        }
+        function selectCalendarDay(y,m,d) { selectedDate = new Date(y,m,d); renderCalendar(); }
+        function changeMonth(delta) { currentMonth = new Date(currentMonth.getFullYear(),currentMonth.getMonth()+delta,1); renderCalendar(); }
+        function renderCalendarEvents() {
+            var c = document.getElementById('calendar-events'), events = getEventsForDate(selectedDate);
+            var html = '<h4 style="font-family:Fraunces,serif;margin-bottom:12px">'+selectedDate.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})+'</h4>';
+            if (!events.feedingStarters.length && !events.sessions.length) html += '<p style="color:var(--text-secondary)">No events</p>';
+            else {
+                events.feedingStarters.forEach(function(s){ var notifyIcon = s.notificationsEnabled ? ' 🔔' : ' 🔕'; var iconContent = s.photo ? '<img src="'+s.photo+'" style="width:24px;height:24px;border-radius:6px;object-fit:cover">' : '<span style="font-size:20px">'+s.name.charAt(0).toUpperCase()+'</span>'; html += '<div class="event-card" onclick="openStarterDetail('+s.id+')" style="background:rgba(212,169,74,0.1)">'+iconContent+'<div style="flex:1"><b>'+s.name+notifyIcon+'</b><br><span style="font-size:13px;color:var(--text-secondary)">Feed ('+formatInterval(getIntervalHours(s))+')</span></div><span style="color:var(--text-secondary)">&gt;</span></div>'; });
+                events.sessions.forEach(function(s){ 
+                    var title = s.title || formatShortDate(s.startDate); 
+                    var dayInfo = s.isActive ? 'Day ' + s.currentDay : 'Completed';
+                    html += '<div class="event-card" onclick="openSessionDetail('+s.id+')" style="background:rgba(212,133,74,0.1)"><span style="font-size:20px">'+getPhaseIcon(s.currentPhase)+'</span><div style="flex:1"><b>'+title+'</b><br><span style="font-size:13px;color:var(--text-secondary)">'+dayInfo+'</span></div><span style="color:var(--text-secondary)">&gt;</span></div>'; 
+                });
+            }
+            c.innerHTML = html;
+        }
+        function openStarterDetail(id) {
+            var s = appData.starters.find(function(x){return x.id===id;}); if (!s) return;
+            document.getElementById('starter-detail-title').textContent = s.name;
+            var intervalHours = getIntervalHours(s);
+            var hoursSinceFed = s.lastFed ? Math.floor((Date.now() - new Date(s.lastFed+'T00:00:00').getTime()) / 3600000) : null;
+            var fedStr = s.lastFed ? new Date(s.lastFed+'T00:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) : 'Never';
+            var locName = s.location.charAt(0).toUpperCase() + s.location.slice(1);
+            var nextFeed = getNextFeedingDate(s);
+            var nextFeedStr = nextFeed ? nextFeed.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) : 'N/A';
+            var notifyStatus = s.notificationsEnabled ? '🔔 ON' : '🔕 OFF';
+            var iconHtml = s.photo ? '<img src="'+s.photo+'" style="width:80px;height:80px;border-radius:12px;object-fit:cover">' : '<span style="font-size:48px">'+s.name.charAt(0).toUpperCase()+'</span>';
+            document.getElementById('starter-detail-body').innerHTML = '<div style="text-align:center;padding:20px">'+iconHtml+'<h2 style="margin-top:12px">'+s.name+'</h2><p style="color:var(--text-secondary)">'+locName+'</p></div><div class="detail-section"><h4>Status</h4><p><b>Last Fed:</b> '+fedStr+'</p>'+(hoursSinceFed!==null?'<p><b>Hours Since:</b> '+hoursSinceFed+'</p>':'')+'<p><b>Interval:</b> '+formatInterval(intervalHours)+'</p>'+(s.location!=='dried'?'<p><b>Next:</b> '+nextFeedStr+'</p>':'')+'<p><b>Notifications:</b> '+notifyStatus+'</p></div>'+(s.notes?'<div class="detail-section"><h4>Notes</h4><p>'+s.notes+'</p></div>':'')+(s.location!=='dried'?'<button class="btn-primary" style="background:var(--success)" onclick="feedStarter('+s.id+');closeModal(\'starter-detail\');renderCalendar()">Mark as Fed</button>':'')+'<button class="btn-primary" onclick="closeModal(\'starter-detail\');editStarter('+s.id+')">Edit</button>';
+            openModal('starter-detail');
+        }
+        function getEventsForDate(date) { var feedingStarters = appData.starters.filter(function(s) { if (s.location === 'dried' || !s.lastFed) return false; var nf = getNextFeedingDate(s); return nf && isSameDay(nf, date); }); var sessions = appData.sessions.filter(function(s) { return isSameDay(new Date(s.startDate),date); }); return { feeding: feedingStarters.length > 0, session: sessions.length > 0, feedingStarters: feedingStarters, sessions: sessions }; }
+        function isSameDay(a,b) { return a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate(); }
+
+        function exportRecipePaprika(id) {
+            var r = appData.recipes.find(function(x){return x.id===id;}); if (!r) return;
+            var ingredients = r.ingredients ? r.ingredients.map(function(i) { return i.amount + ' ' + i.unit + ' ' + i.name; }).join('\n') : '';
+            var directions = r.directions ? r.directions.map(function(d, idx) { return 'Day ' + d.day + ', Step ' + (idx+1) + ': ' + d.step; }).join('\n') : '';
+            var content = 'Name: ' + r.name + '\n';
+            content += 'Source: Mother Nance App\n';
+            content += 'Categories: ' + (r.type || 'Bread') + '\n';
+            content += 'Cook Time: ' + r.days + ' days\n';
+            content += 'Ingredients:\n' + ingredients + '\n\n';
+            content += 'Directions:\n' + directions + '\n\n';
+            if (r.notes) content += 'Notes:\n' + r.notes + '\n';
+            if (r.phases) content += '\nPhases: ' + r.phases.join(', ') + '\n';
+            downloadFile(r.name.replace(/[^a-z0-9]/gi, '_') + '.txt', content, 'text/plain');
+        }
+
+        function exportRecipeText(id) {
+            var r = appData.recipes.find(function(x){return x.id===id;}); if (!r) return;
+            var content = '═══════════════════════════════════════\n';
+            content += '  ' + r.name.toUpperCase() + '\n';
+            content += '═══════════════════════════════════════\n\n';
+            content += 'Type: ' + (r.type || 'Bread') + '\n';
+            content += 'Duration: ' + r.days + ' day' + (r.days > 1 ? 's' : '') + '\n\n';
+            content += '───────────────────────────────────────\n';
+            content += '  INGREDIENTS\n';
+            content += '───────────────────────────────────────\n';
+            if (r.ingredients && r.ingredients.length) {
+                r.ingredients.forEach(function(i) { content += '• ' + i.amount + ' ' + i.unit + ' ' + i.name + '\n'; });
+            } else { content += '(none)\n'; }
+            content += '\n───────────────────────────────────────\n';
+            content += '  DIRECTIONS\n';
+            content += '───────────────────────────────────────\n';
+            if (r.directions && r.directions.length) {
+                var currentDay = 0;
+                r.directions.forEach(function(d, idx) {
+                    if (d.day !== currentDay) { currentDay = d.day; content += '\nDAY ' + currentDay + ':\n'; }
+                    content += (idx+1) + '. ' + d.step + '\n';
+                });
+            } else { content += '(none)\n'; }
+            if (r.phases) { content += '\n───────────────────────────────────────\n  PHASES\n───────────────────────────────────────\n' + r.phases.join(' → ') + '\n'; }
+            if (r.notes) { content += '\n───────────────────────────────────────\n  NOTES\n───────────────────────────────────────\n' + r.notes + '\n'; }
+            downloadFile(r.name.replace(/[^a-z0-9]/gi, '_') + '.txt', content, 'text/plain');
+        }
+
+        function exportSessionText(id) {
+            var s = appData.sessions.find(function(x){return x.id===id;}); if (!s) return;
+            var recipe = appData.recipes.find(function(r){return r.id===s.recipeId;});
+            var content = '═══════════════════════════════════════\n';
+            content += '  SESSION: ' + (s.title || s.recipeName) + '\n';
+            content += '═══════════════════════════════════════\n\n';
+            content += 'Recipe: ' + s.recipeName + '\n';
+            content += 'Started: ' + new Date(s.startDate).toLocaleString() + '\n';
+            content += 'Status: ' + (s.isActive ? 'Active - ' + s.currentPhase : 'Completed') + '\n';
+            content += 'Day: ' + s.currentDay + '\n';
+            if (s.starterName) content += 'Starter: ' + s.starterName + '\n';
+            if (s.phaseLog && s.phaseLog.length) {
+                content += '\n───────────────────────────────────────\n';
+                content += '  PHASE HISTORY\n';
+                content += '───────────────────────────────────────\n';
+                s.phaseLog.forEach(function(log) {
+                    var start = new Date(log.startTime).toLocaleString();
+                    var end = log.endTime ? new Date(log.endTime).toLocaleString() : 'ongoing';
+                    var duration = '';
+                    if (log.endTime) { var mins = Math.floor((new Date(log.endTime) - new Date(log.startTime)) / 60000); duration = ' (' + formatDuration(mins) + ')'; }
+                    content += '• ' + log.phase + ': ' + start + ' → ' + end + duration + '\n';
+                });
+            }
+            if (s.notes) {
+                content += '\n───────────────────────────────────────\n';
+                content += '  NOTES\n';
+                content += '───────────────────────────────────────\n';
+                var plainNotes = s.notes.replace(/<br>/g, '\n').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ');
+                content += plainNotes + '\n';
+            }
+            downloadFile('Session_' + (s.title || s.recipeName).replace(/[^a-z0-9]/gi, '_') + '.txt', content, 'text/plain');
+        }
+
+        function exportSessionJSON(id) {
+            var s = appData.sessions.find(function(x){return x.id===id;}); if (!s) return;
+            var exportData = {
+                title: s.title || s.recipeName,
+                recipeName: s.recipeName,
+                startDate: s.startDate,
+                status: s.isActive ? 'active' : 'completed',
+                currentPhase: s.currentPhase,
+                currentDay: s.currentDay,
+                starterName: s.starterName,
+                phaseLog: s.phaseLog,
+                notes: s.notes ? s.notes.replace(/<br>/g, '\n').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ') : '',
+                checkedIngredients: s.checkedIngredients,
+                checkedSteps: s.checkedSteps
+            };
+            downloadFile('Session_' + (s.title || s.recipeName).replace(/[^a-z0-9]/gi, '_') + '.json', JSON.stringify(exportData, null, 2), 'application/json');
+        }
+
+        function exportAllSessions() {
+            var content = '═══════════════════════════════════════\n';
+            content += '  ALL SESSIONS EXPORT\n';
+            content += '  Exported: ' + new Date().toLocaleString() + '\n';
+            content += '═══════════════════════════════════════\n\n';
+            appData.sessions.forEach(function(s, idx) {
+                content += '\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+                content += 'SESSION #' + (idx+1) + ': ' + (s.title || s.recipeName) + '\n';
+                content += '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n';
+                content += 'Recipe: ' + s.recipeName + '\n';
+                content += 'Started: ' + new Date(s.startDate).toLocaleString() + '\n';
+                content += 'Status: ' + (s.isActive ? 'Active - ' + s.currentPhase : 'Completed') + '\n';
+                if (s.starterName) content += 'Starter: ' + s.starterName + '\n';
+                if (s.phaseLog && s.phaseLog.length) {
+                    content += '\nPhase History:\n';
+                    s.phaseLog.forEach(function(log) {
+                        var start = new Date(log.startTime).toLocaleString();
+                        var end = log.endTime ? new Date(log.endTime).toLocaleString() : 'ongoing';
+                        content += '  • ' + log.phase + ': ' + start + ' → ' + end + '\n';
+                    });
+                }
+                if (s.notes) {
+                    content += '\nNotes:\n';
+                    var plainNotes = s.notes.replace(/<br>/g, '\n').replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ');
+                    content += plainNotes + '\n';
+                }
+            });
+            downloadFile('All_Sessions_' + new Date().toISOString().split('T')[0] + '.txt', content, 'text/plain');
+        }
+
+        function downloadFile(filename, content, mimeType) {
+            var blob = new Blob([content], {type: mimeType});
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        loadData(); renderStarters(); renderRecipes(); renderSessions();
+    </script>
+</body>
+</html>
